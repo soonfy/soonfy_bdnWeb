@@ -46,4 +46,6 @@ router.get('/logout', checkLogin, User.getLogout);
 
 router.post('/key/insert', checkLogin, Key.insert);
 
+router.get('/key', checkLogin, Key.list);
+
 module.exports = router;

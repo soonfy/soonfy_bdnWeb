@@ -1,15 +1,59 @@
 <%- include header %>
 
   <div class="container">
-    <div class="row col-xs-6">
-      <form class="form-horizontal" method="POST" action="/key/insert">
-        <strong>添加关键词</strong>
-        <div class="form-group">
-          <input type="text" name="name" class="form-control" placeholder="请输入关键词">
-          <button type="submit" class="btn btn-default navbar-btn">添加</button>
-        </div>
-      </form>
+    <div class="row col-xs-12">
+      <div class="col-xs-3"></div>
+      <div class="col-xs-6">
+        <strong>查找关键词</strong>
+        <form class="form-horizontal" method="POST" action="/key/search">
+          <div class="col-lg-10">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="请输入关键词" />
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">查找</button>
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+
+  <div class="container">
+    <% for(var i=0; i<keys.length; i++) { %>
+      <div class="list-group col-xs-4">
+        <a href="/key/<%= keys[i]._id %>" class="list-group-item active">
+          <h4 class="list-group-item-heading"><%= keys[i]._id %></h4>
+        </a>
+        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
+          <strong class="list-group-item-heading">查询关键词位置</strong>
+          <span class="list-group-item-text"><%= keys[i].tn %></span>
+        </a>
+        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
+          <strong class="list-group-item-heading">查询包含以下全部的关键词</strong>
+          <span class="list-group-item-text"><%= keys[i].q1 %></span>
+        </a>
+        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
+          <strong class="list-group-item-heading">查询包含以下任意一个关键词</strong>
+          <span class="list-group-item-text"><%= keys[i].q3 %></span>
+        </a>
+        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
+          <strong class="list-group-item-heading">查询不包含以下关键词</strong>
+          <span class="list-group-item-text"><%= keys[i].q4 %></span>
+        </a>
+        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
+          <strong class="list-group-item-heading">查询限定的新闻源</strong>
+          <span class="list-group-item-text"><%= keys[i].q6 %></span>
+        </a>
+        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
+          <strong class="list-group-item-heading">添加时间</strong>
+          <span class="list-group-item-text">
+            <%= moment(keys[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %>
+              </span>
+        </a>
+      </div>
+      <% } %>
+
   </div>
 
   <%- include footer %>

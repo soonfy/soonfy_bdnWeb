@@ -55,3 +55,24 @@ exports.insert = function (req, res) {
     })
   }
 }
+
+exports.list = function (req, res) {
+  console.log(req.query);
+  let {page} = req.query
+  page = page || 1
+  Key.find({isCrawled: {$in: [0, 1, 2]}}, {}, {sort: {createdAt: -1}, skip: 50 * (page - 1), limit: 50}, function (err, keys) {
+    if(err){
+      console.log(err);
+      req.flash('err', err)
+      res.redirect('back')
+    }else{
+      res.render('key', {
+        title: '关键词',
+        user: req.session.user,
+        keys: keys,
+        success: req.flash('success').toString(),
+        error: req.flash('error').toString()
+      })
+    }
+  })
+}
