@@ -8,9 +8,11 @@ var bodyParser = require('body-parser');
 var debug = require('debug')('bdn_website:server');
 
 var mongoose = require('mongoose')            //connect mongodb
-var session = require('express-session')
-var mongoStore = require('connect-mongo')(session)        //insert session to mongodb
-var flash = require('connect-flash')          //store info in session
+
+
+// var session = require('express-session')
+// var mongoStore = require('connect-mongo')(session)        //insert session to mongodb
+// var flash = require('connect-flash')          //store info in session
 
 var routes = require('./routes/index');
 
@@ -23,7 +25,7 @@ app.set('views', path.join(__dirname, 'app', 'views'));
 app.set('view engine', 'ejs');
 
 //flash store info
-app.use(flash())
+// app.use(flash())
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -44,17 +46,17 @@ mongoose.set('debug', true)             //mongo debug
 
 //insert session to mongodb
 //session config before route config
-app.use(session({
-  secret: 'baidunews_users',
-  key: 'baidu_news',
-  cookie: {maxAge: 1000 * 60 * 60 * 24},
-  restore: false,
-  saveUninitialized: true,
-  store: new mongoStore({
-    url: dburl,
-    collections: 'sessions'
-  })
-}))
+// app.use(session({
+//   secret: 'baidunews_users',
+//   key: 'baidu_news',
+//   cookie: {maxAge: 1000 * 60 * 60 * 24},
+//   restore: false,
+//   saveUninitialized: true,
+//   store: new mongoStore({
+//     url: dburl,
+//     collections: 'sessions'
+//   })
+// }))
 
 app.use('/', routes);
 

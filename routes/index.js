@@ -7,8 +7,8 @@ let Key = require('../app/controllers/key.js');
 router.get('/', function (req, res) {
   res.render('index', {
     title: '首页',
-    success: req.flash('success').toString(),
-    error: req.flash('error').toString()
+    // success: req.flash('success').toString(),
+    // error: req.flash('error').toString()
   })
 });
 
