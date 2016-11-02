@@ -10,6 +10,9 @@
           <span class="list-group-item-text"><%= news[i].author %></span>
         </a>
         <a class="list-group-item">
+          <span class="list-group-item-text"><%= moment(news[i].publishedAt).format('YYYY-MM-DD HH:mm:ss') %></span>
+        </a>
+        <a class="list-group-item">
           <span class="list-group-item-text"><%= news[i].summary %></span>
         </a>
         <a class="list-group-item">
