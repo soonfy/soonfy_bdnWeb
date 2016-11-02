@@ -37,8 +37,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
 //connect mongodb
-// var dburl = 'mongodb://normal:Joke123@ant09.idatage.com:27021/tarantula'
-var dburl = 'mongodb://localhost/baidu_news'
+var dburl = 'mongodb://normal:Joke123@ant09.idatage.com:27021/tarantula'
+// var dburl = 'mongodb://localhost/baidu_news'
 mongoose.connect(dburl)
 mongoose.set('debug', true)             //mongo debug
 
@@ -89,7 +89,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', 3040);
 
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
