@@ -22,38 +22,64 @@
   <div class="container">
     <% for(var i=0; i<keys.length; i++) { %>
       <div class="list-group col-xs-4">
-        <a href="/key/<%= keys[i]._id %>" class="list-group-item active">
-          <h4 class="list-group-item-heading"><%= keys[i]._id %></h4>
+        <a href="/key/info?id=<%= keys[i]._id %>" target="_blank" class="list-group-item active">
+          <h4 class="list-group-item-heading"><%= keys[i].key %></h4>
         </a>
-        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
-          <strong class="list-group-item-heading">查询关键词位置</strong>
+        <a class="list-group-item">
+          <strong class="list-group-item-heading">查询关键词位置：</strong>
           <span class="list-group-item-text"><%= keys[i].tn %></span>
         </a>
-        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
-          <strong class="list-group-item-heading">查询包含以下全部的关键词</strong>
+        <a class="list-group-item">
+          <strong class="list-group-item-heading">查询包含以下全部的关键词：</strong>
           <span class="list-group-item-text"><%= keys[i].q1 %></span>
         </a>
-        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
-          <strong class="list-group-item-heading">查询包含以下任意一个关键词</strong>
+        <a class="list-group-item">
+          <strong class="list-group-item-heading">查询包含以下任意一个关键词：</strong>
           <span class="list-group-item-text"><%= keys[i].q3 %></span>
         </a>
-        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
-          <strong class="list-group-item-heading">查询不包含以下关键词</strong>
+        <a class="list-group-item">
+          <strong class="list-group-item-heading">查询不包含以下关键词：</strong>
           <span class="list-group-item-text"><%= keys[i].q4 %></span>
         </a>
-        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
-          <strong class="list-group-item-heading">查询限定的新闻源</strong>
+        <a class="list-group-item">
+          <strong class="list-group-item-heading">查询限定的新闻源：</strong>
           <span class="list-group-item-text"><%= keys[i].q6 %></span>
         </a>
-        <a href="/key/<%= keys[i]._id %>" class="list-group-item">
-          <strong class="list-group-item-heading">添加时间</strong>
-          <span class="list-group-item-text">
-            <%= moment(keys[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %>
-              </span>
+        <a class="list-group-item">
+          <strong class="list-group-item-heading">添加时间：</strong>
+          <span class="list-group-item-text"><%= moment(keys[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %></span>
         </a>
       </div>
       <% } %>
 
   </div>
+
+  <% if(pages > 1){ %>
+  <div class="container">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-4">
+      <ul class="pagination">
+        <% if(page == 1){ %>
+          <li class="disabled"><a>首页</a></li>
+          <li class="active"><a><%= page %></a></li>
+          <li><a href="/key?page=<%= parseInt(page)+1 %>"><%= parseInt(page)+1 %></a></li>
+          <li><a href="/key?page=<%= pages %>">尾页</a></li>
+        <% }else if(page == pages){ %>
+          <li><a href="/key?page=1">首页</a></li>
+          <li><a href="/key?page=<%= parseInt(page)-1 %>"><%= parseInt(page)-1 %></a></li>
+          <li class="active"><a><%= pages %></a></li>
+          <li class="disabled"><a>尾页</a></li>
+        <% }else{ %>
+          <li><a href="/key?page=1">首页</a></li>
+          <li><a href="/key?page=<%= parseInt(page)-1 %>"><%= parseInt(page)-1 %></a></li>
+          <li class="active"><a><%= page %></a></li>
+          <li><a href="/key?page=<%= parseInt(page)+1 %>"><%= parseInt(page)+1 %></a></li>
+          <li><a href="/key?page=<%= pages %>">尾页</a></li>
+        <% } %>
+      </ul>
+    </div>
+    <div class="col-xs-4"></div>
+  </div>
+<% } %>
 
   <%- include footer %>

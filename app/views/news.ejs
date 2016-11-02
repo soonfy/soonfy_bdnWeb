@@ -1,22 +1,5 @@
 <%- include header %>
 
-<% if(key){ %>
-  <div class="container">
-    <div class="col-xs-4"></div>
-    <div class="page-header col-xs-4">
-      <h4>
-      <div>
-        <strong>关键词位置：</strong><span><%= key.tn %></span>
-      </div>
-      <div>
-        <strong>关键词：</strong><span><%= key.key %></span>
-      </div>
-      </h4>
-      </div>
-    <div class="col-xs-4"></div>
-  </div>
-<% } %>
-
   <div class="container">
     <% for(var i=0; i<news.length; i++) { %>
       <div class="list-group col-xs-4">
@@ -45,19 +28,19 @@
         <% if(page == 1){ %>
           <li class="disabled"><a>首页</a></li>
           <li class="active"><a><%= page %></a></li>
-          <li><a href="/key/info?id=<%= news[0].keyId %>&page=<%= parseInt(page)+1 %>"><%= parseInt(page)+1 %></a></li>
-          <li><a href="/key/info?id=<%= news[0].keyId %>&page=<%= pages %>">尾页</a></li>
+          <li><a href="/news?page=<%= parseInt(page)+1 %>"><%= parseInt(page)+1 %></a></li>
+          <li><a href="/news?page=<%= pages %>">尾页</a></li>
         <% }else if(page == pages){ %>
-          <li><a href="/key/info?id=<%= news[0].keyId %>&page=1">首页</a></li>
-          <li><a href="/key/info?id=<%= news[0].keyId %>&page=<%= parseInt(page)-1 %>"><%= parseInt(page)-1 %></a></li>
+          <li><a href="/news?page=1">首页</a></li>
+          <li><a href="/news?page=<%= parseInt(page)-1 %>"><%= parseInt(page)-1 %></a></li>
           <li class="active"><a><%= pages %></a></li>
           <li class="disabled"><a>尾页</a></li>
         <% }else{ %>
-          <li><a href="/key/info?id=<%= news[0].keyId %>&page=1">首页</a></li>
-          <li><a href="/key/info?id=<%= news[0].keyId %>&page=<%= parseInt(page)-1 %>"><%= parseInt(page)-1 %></a></li>
+          <li><a href="/news?page=1">首页</a></li>
+          <li><a href="/news?page=<%= parseInt(page)-1 %>"><%= parseInt(page)-1 %></a></li>
           <li class="active"><a><%= page %></a></li>
-          <li><a href="/key/info?id=<%= news[0].keyId %>&page=<%= parseInt(page)+1 %>"><%= parseInt(page)+1 %></a></li>
-          <li><a href="/key/info?id=<%= news[0].keyId %>&page=<%= pages %>">尾页</a></li>
+          <li><a href="/news?page=<%= parseInt(page)+1 %>"><%= parseInt(page)+1 %></a></li>
+          <li><a href="/news?page=<%= pages %>">尾页</a></li>
         <% } %>
       </ul>
     </div>
