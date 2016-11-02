@@ -1,8 +1,6 @@
 # bdn_website
 
-1. start
+1. start  
 ```
-npm start
-||
-node app.js
+npm start || node app.js
 ```
