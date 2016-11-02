@@ -37,15 +37,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
 //connect mongodb
-var dburl = 'mongodb://localhost/bdNews'
+// var dburl = 'mongodb://normal:Joke123@ant09.idatage.com:27021/tarantula'
+var dburl = 'mongodb://localhost/baidu_news'
 mongoose.connect(dburl)
 mongoose.set('debug', true)             //mongo debug
 
 //insert session to mongodb
 //session config before route config
 app.use(session({
-  secret: 'baidunews_user',
-  key: 'baidunews',
+  secret: 'baidunews_users',
+  key: 'baidu_news',
   cookie: {maxAge: 1000 * 60 * 60 * 24},
   restore: false,
   saveUninitialized: true,

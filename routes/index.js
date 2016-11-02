@@ -6,7 +6,7 @@ let Key = require('../app/controllers/key.js');
 
 //not login,goto login page
 var checkLogin = function (req, res, next) {
-  if (false && !req.session.user) {
+  if (!req.session.user) {
     req.flash('error', 'user not login.');
     res.redirect('/login');
   }else{
@@ -16,7 +16,7 @@ var checkLogin = function (req, res, next) {
 
 //login, goto back
 var checkNotLogin = function (req, res, next) {
-  if (false && req.session.user) {
+  if (req.session.user) {
     req.flash('error', 'user already login.');
     res.redirect('back');
   }else{
@@ -28,7 +28,7 @@ var checkNotLogin = function (req, res, next) {
 router.get('/', checkLogin, function (req, res) {
   res.render('index', {
     title: '首页',
-    user: req.session.user,
+    user: req.session.user,  //no login
     success: req.flash('success').toString(),
     error: req.flash('error').toString()
   })

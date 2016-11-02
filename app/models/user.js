@@ -13,6 +13,6 @@ const UserSchema = new Schema({
 })
 
 //测试
-const UserModel = mongoose.model('users', UserSchema);
+const UserModel = mongoose.model('baidunews_users', UserSchema);
 
 module.exports = UserModel

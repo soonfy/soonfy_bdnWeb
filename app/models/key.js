@@ -32,13 +32,16 @@ const KeySchema = new Schema({
   },
   isCrawled: {          //0-等待采集，1-正在采集, 2-采集出错，3-删除需求
     type: Number,
+    index: true,
     default: 0
   },
   updatedAt: Date,      //已更新时间
   createdAt: Date       //创建时间
 })
 
+KeySchema.index({ key: 1, tn: 1 });
+
 //测试
-const KeyModel = mongoose.model('keys', KeySchema);
+const KeyModel = mongoose.model('baidunews_keywords', KeySchema);
 
 module.exports = KeyModel

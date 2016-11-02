@@ -7,7 +7,10 @@ const NewsSchema = new Schema({
     index: true,
     unique: true
   },
-  keyId: String,  //关键词_id
+  keyId: {
+    type: String,  //关键词_id
+    index: true
+  },
   url: String,
   title: String,
   author: String,
@@ -17,6 +20,6 @@ const NewsSchema = new Schema({
 })
 
 //测试
-const NewsModel = mongoose.model('news', NewsSchema);
+const NewsModel = mongoose.model('baidunews_news', NewsSchema);
 
 module.exports = NewsModel

@@ -57,7 +57,6 @@ exports.insert = function (req, res) {
 }
 
 exports.list = function (req, res) {
-  console.log(req.query);
   let {page} = req.query
   page = page || 1
   let pages
@@ -91,7 +90,6 @@ exports.list = function (req, res) {
 }
 
 exports.info = function (req, res) {
-  console.log(req.query);
   let {id, page} = req.query
   let pages, key
   page = page || 1
@@ -138,7 +136,6 @@ exports.info = function (req, res) {
 }
 
 exports.news = function (req, res) {
-  console.log(req.query);
   let {page} = req.query
   let pages, key
   page = page || 1
