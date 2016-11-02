@@ -31,15 +31,4 @@
         <% } %>
       </ul>
     </div>
-    <nav class="navbar navbar-default navbar-right col-xs-2" role="navigation">
-      <ul class="nav navbar-nav navbar-right">
-        <% if(user){ %>
-          <li><a><span class="glyphicon glyphicon-user"></span><%= user.name %></a></li>
-          <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>退出</a></li>
-          <% }else{ %>
-            <li><a href="/register"><span class="glyphicon glyphicon-user"></span>注册</a></li>
-            <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span>登录</a></li>
-            <% } %>
-      </ul>
-    </nav>
   </div>

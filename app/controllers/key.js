@@ -78,7 +78,6 @@ exports.list = function (req, res) {
       req.flash('success', 'key search success.')
       res.render('key', {
         title: '关键词',
-        user: req.session.user,
         keys: keys,
         pages: pages,
         page: page,
@@ -120,7 +119,6 @@ exports.info = function (req, res) {
             req.flash('success', 'news search success.')
             res.render('result', {
               title: '新闻',
-              user: req.session.user,
               news: news,
               key: key,
               pages: pages,
@@ -164,7 +162,6 @@ exports.news = function (req, res) {
             req.flash('success', 'news search success.')
             res.render('news', {
               title: '新闻',
-              user: req.session.user,
               news: news,
               pages: pages,
               page: page,
