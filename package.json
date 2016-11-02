@@ -1,6 +1,6 @@
 {
-  "name": "bdn_website",
-  "version": "0.0.0",
+  "name": "baidu_news_website",
+  "version": "0.0.1",
   "description": "web site, insert baidu news keyword",
   "private": true,
   "scripts": {

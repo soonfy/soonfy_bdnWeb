@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const NewsSchema = new Schema({
-  _id: {          //关键词_id+新闻url
+  _id: {        //关键词_id+新闻url
     type: String,
     index: true,
     unique: true
@@ -11,8 +11,8 @@ const NewsSchema = new Schema({
   url: String,
   title: String,
   author: String,
-  publishedAt: Date,
   summary: String,
+  publishedAt: Date,  //新闻发布时间
   createdAt: Date
 })
 

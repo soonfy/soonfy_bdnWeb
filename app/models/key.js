@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const KeySchema = new Schema({
-  key: {                // keys-西游 伏妖 (周星驰 | 徐克) -(西游降魔 | 大闹天宫) site(人民网 | 新华网)
+  key: {              // keys-西游 伏妖 (周星驰 | 徐克) -(西游降魔 | 大闹天宫)
     type: String,
     index: true
   },
@@ -26,16 +26,16 @@ const KeySchema = new Schema({
     type: String,
     default: ''
   },
-  s: {                  //1-全部时间,2-限定时间
+  s: {                  //1-限定时间，2-全部时间
     type: Number,
     default: 2
   },
-  isCrawled: {          //0-等待采集，1-正在采集,2-采集出错，3-用户删除
+  isCrawled: {          //0-等待采集，1-正在采集, 2-采集出错，3-删除需求
     type: Number,
     default: 0
   },
-  updatedAt: Date,
-  createdAt: Date
+  updatedAt: Date,      //已更新时间
+  createdAt: Date       //创建时间
 })
 
 //测试
