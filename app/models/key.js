@@ -26,7 +26,7 @@ const KeySchema = new Schema({
     type: String,
     default: ''
   },
-  s: {                  //1-限定时间，2-全部时间
+  s: {                  //1-全部时间，2-限定时间
     type: Number,
     default: 2
   },

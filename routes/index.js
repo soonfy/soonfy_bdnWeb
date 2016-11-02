@@ -6,7 +6,7 @@ let Key = require('../app/controllers/key.js');
 
 //not login,goto login page
 var checkLogin = function (req, res, next) {
-  if (!req.session.user) {
+  if (false && !req.session.user) {
     req.flash('error', 'user not login.');
     res.redirect('/login');
   }else{
@@ -16,7 +16,7 @@ var checkLogin = function (req, res, next) {
 
 //login, goto back
 var checkNotLogin = function (req, res, next) {
-  if (req.session.user) {
+  if (false && req.session.user) {
     req.flash('error', 'user already login.');
     res.redirect('back');
   }else{
