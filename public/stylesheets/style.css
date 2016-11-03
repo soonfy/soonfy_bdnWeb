@@ -10,3 +10,7 @@ a {
 .container {
   margin: 20px;
 }
+
+.split{
+  height: 4px;
+}

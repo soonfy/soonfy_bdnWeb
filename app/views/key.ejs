@@ -8,9 +8,9 @@
         <form class="form-horizontal" method="POST" action="/key/search">
           <div class="col-lg-10">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="请输入关键词" />
+              <input type="text" class="form-control" placeholder="暂时不能使用..." />
               <span class="input-group-btn">
-                <button class="btn btn-default" type="submit">查找</button>
+                <button class="disabled btn btn-default" type="submit">查找</button>
               </span>
             </div>
           </div>
@@ -21,37 +21,47 @@
 
   <div class="container">
     <% for(var i=0; i<keys.length; i++) { %>
-      <div class="list-group col-xs-4">
-        <a href="/key/info?id=<%= keys[i]._id %>" target="_blank" class="list-group-item active">
-          <h4 class="list-group-item-heading"><%= keys[i].key %></h4>
-        </a>
-        <a class="list-group-item">
-          <strong class="list-group-item-heading">查询关键词位置：</strong>
-          <span class="list-group-item-text"><%= keys[i].tn %></span>
-        </a>
-        <a class="list-group-item">
-          <strong class="list-group-item-heading">查询包含以下全部的关键词：</strong>
-          <span class="list-group-item-text"><%= keys[i].q1 %></span>
-        </a>
-        <a class="list-group-item">
-          <strong class="list-group-item-heading">查询包含以下任意一个关键词：</strong>
-          <span class="list-group-item-text"><%= keys[i].q3 %></span>
-        </a>
-        <a class="list-group-item">
-          <strong class="list-group-item-heading">查询不包含以下关键词：</strong>
-          <span class="list-group-item-text"><%= keys[i].q4 %></span>
-        </a>
-        <a class="list-group-item">
-          <strong class="list-group-item-heading">查询限定的新闻源：</strong>
-          <span class="list-group-item-text"><%= keys[i].q6 %></span>
-        </a>
-        <a class="list-group-item">
-          <strong class="list-group-item-heading">添加时间：</strong>
-          <span class="list-group-item-text"><%= moment(keys[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %></span>
-        </a>
-      </div>
-      <% } %>
+      <div class="panel panel-primary">
 
+        <div class="panel-heading">
+          <a href="/key/info?id=<%= keys[i]._id %>" target="_blank" class="list-group-item list-group-item-success">
+            <h4 class="list-group-item-heading"><%= keys[i].key %></h4>
+          </a>
+        </div>
+
+        <ul class="list-group panel-info">
+          <li class="list-group-item list-group-item-info">
+            <strong class="list-group-item-heading">查询关键词位置：</strong>
+            <span class="list-group-item-text"><%= keys[i].tn %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-warning">
+            <strong class="list-group-item-heading">查询包含以下全部的关键词：</strong>
+            <span class="list-group-item-text"><%= keys[i].q1 %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-info">
+            <strong class="list-group-item-heading">查询包含以下任意一个关键词：</strong>
+            <span class="list-group-item-text"><%= keys[i].q3 %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-warning">
+            <strong class="list-group-item-heading">查询不包含以下关键词：</strong>
+            <span class="list-group-item-text"><%= keys[i].q4 %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-info">
+            <strong class="list-group-item-heading">查询限定的新闻源：</strong>
+            <span class="list-group-item-text"><%= keys[i].q6 %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-warning">
+            <strong class="list-group-item-heading">添加时间：</strong>
+            <span class="list-group-item-text"><%= moment(keys[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %></span>
+          </li>
+        </ul>
+      </div>
+    <% } %>
   </div>
 
   <% if(pages > 1){ %>

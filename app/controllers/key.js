@@ -5,7 +5,8 @@ let moment = require('moment');
 
 exports.insert = function (req, res) {
   let {keyword, tn} = req.body;
-  let key = keyword.trim();
+  let key = ' ' + keyword + ' ';
+  console.log(key);
   if (key) {
     Key.findOne({ key: key, tn: tn }, {}, function (err, result) {
       if (err) {
@@ -16,6 +17,7 @@ exports.insert = function (req, res) {
         return res.redirect('/')
       } else {
         let query = key.replace(/\s+-\(/g, ' #@#q4: ').replace(/\s+\(/g, ' #@#q3: ').replace(/site:/g, ' #@#site: ').replace(/\)\s+/g, ' #@# ')
+        console.log(query);
         let keys = query.split(/#@#/)
         let q1 = q3 = q4 = q6 = ''
         let s = 2

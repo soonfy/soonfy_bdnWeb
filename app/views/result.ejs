@@ -19,25 +19,37 @@
 
   <div class="container">
     <% for(var i=0; i<news.length; i++) { %>
-      <div class="list-group col-xs-4">
-        <a href="<%= news[i].url %>" target="_blank" class="list-group-item active">
-          <h4 class="list-group-item-heading"><%= news[i].title %></h4>
-        </a>
-        <a class="list-group-item">
-          <span class="list-group-item-text"><%= news[i].author %></span>
-        </a>
-        <a class="list-group-item">
-          <span class="list-group-item-text"><%= moment(news[i].publishedAt).format('YYYY-MM-DD HH:mm:ss') %></span>
-        </a>
-        <a class="list-group-item">
-          <span class="list-group-item-text"><%= news[i].summary %></span>
-        </a>
-        <a class="list-group-item">
-          <span class="list-group-item-text"><%= moment(news[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %></span>
-        </a>
-      </div>
-      <% } %>
+      <div class="panel panel-primary">
 
+        <div class="panel-heading">
+          <a href="<%= news[i].url %>" target="_blank" class="list-group-item list-group-item-success">
+            <h4 class="list-group-item-heading"><%= news[i].title %></h4>
+          </a>
+        </div>
+
+        <ul class="list-group panel-info">
+          <li class="list-group-item list-group-item-info">
+            <strong class="list-group-item-heading">新闻来源：</strong>
+            <span class="list-group-item-text"><%= news[i].author %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-warning">
+            <strong class="list-group-item-heading">新闻摘要：</strong>
+            <span class="list-group-item-text"><%= news[i].summary %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-info">
+            <strong class="list-group-item-heading">新闻发布时间：</strong>
+            <span class="list-group-item-text"><%= moment(news[i].publishedAt).format('YYYY-MM-DD HH:mm:ss') %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-warning">
+            <strong class="list-group-item-heading">新闻采集时间：</strong>
+            <span class="list-group-item-text"><%= moment(news[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %></span>
+          </li>
+        </ul>
+      </div>
+    <% } %>
   </div>
 
   <% if(pages > 1){ %>
