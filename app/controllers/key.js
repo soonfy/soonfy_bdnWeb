@@ -10,10 +10,8 @@ exports.insert = function (req, res) {
   if (key) {
     Key.findOne({ key: key, tn: tn }, {}, function (err, result) {
       if (err) {
-        // req.flash('error', err)
         return res.redirect('/')
       } else if (result !== null) {
-        // req.flash('error', 'key exists. ' + key)
         return res.redirect('/')
       } else {
         let query = key.replace(/\s+-\(/g, ' #@#q4: ').replace(/\s+\(/g, ' #@#q3: ').replace(/site:/g, ' #@#site: ').replace(/\)\s+/g, ' #@# ')
@@ -21,14 +19,14 @@ exports.insert = function (req, res) {
         let keys = query.split(/#@#/)
         let q1 = q3 = q4 = q6 = ''
         let s = 2
-        for(let str of keys){
-          if(str.trim() && str.indexOf('q3: ') > -1){
+        for (let str of keys) {
+          if (str.trim() && str.indexOf('q3: ') > -1) {
             q3 = str.replace('q3: ', '').trim()
-          }else if(str.trim() && str.indexOf('q4: ') > -1){
+          } else if (str.trim() && str.indexOf('q4: ') > -1) {
             q4 = str.replace('q4: ', '').trim()
-          }else if(str.trim() && str.indexOf('site: ') > -1){
+          } else if (str.trim() && str.indexOf('site: ') > -1) {
             q6 = str.replace('site: ', '').replace('(', '').replace(')', '').trim()
-          }else if (str.trim()){
+          } else if (str.trim()) {
             q1 = str.trim()
           }
         }
@@ -46,10 +44,8 @@ exports.insert = function (req, res) {
         })
         _key.save(function (err) {
           if (!err) {
-            // req.flash('success', 'key insert success.')
             res.redirect('/')
-          }else{
-            // req.flash('err', err)
+          } else {
             res.redirect('/')
           }
         })
@@ -62,29 +58,24 @@ exports.list = function (req, res) {
   let {page} = req.query
   page = page || 1
   let pages
-  Key.find({isCrawled: {$in: [0, 1, 2]}}, {}, function (err, keys) {
-    if(err){
+  Key.find({ isCrawled: { $in: [0, 1, 2] } }, {}, function (err, keys) {
+    if (err) {
       console.log(err);
-      // req.flash('err', err)
       res.redirect('back')
-    }else{
+    } else {
       pages = keys.length % 30 === 0 ? keys.length / 30 : parseInt(keys.length / 30 + 1);
     }
   })
-  Key.find({isCrawled: {$in: [0, 1, 2]}}, {}, {sort: {createdAt: -1}, skip: 30 * (page - 1), limit: 30}, function (err, keys) {
-    if(err){
+  Key.find({ isCrawled: { $in: [0, 1, 2] } }, {}, { sort: { createdAt: -1 }, skip: 30 * (page - 1), limit: 30 }, function (err, keys) {
+    if (err) {
       console.log(err);
-      // req.flash('err', err)
       res.redirect('back')
-    }else{
-      // req.flash('success', 'key search success.')
+    } else {
       res.render('key', {
         title: '关键词',
         keys: keys,
         pages: pages,
-        page: page,
-        // success: req.flash('success').toString(),
-        // error: req.flash('error').toString()
+        page: page
       })
     }
   })
@@ -94,39 +85,33 @@ exports.info = function (req, res) {
   let {id, page} = req.query
   let pages, key
   page = page || 1
-  if(id){
-    Key.findOne({_id: id}, {}, function (err, result) {
-      if(err){
+  if (id) {
+    Key.findOne({ _id: id }, {}, function (err, result) {
+      if (err) {
         console.log(err);
-        // req.flash('err', err)
         res.redirect('back')
-      }else{
+      } else {
         key = result
       }
     })
-    News.find({keyId: id}, {}, function (err, news) {
-      if(err){
+    News.find({ keyId: id }, {}, function (err, news) {
+      if (err) {
         console.log(err);
-        // req.flash('err', err)
         res.redirect('back')
-      }else{
+      } else {
         pages = news.length % 30 === 0 ? news.length / 30 : parseInt(news.length / 30 + 1);
 
-        News.find({keyId: id}, {}, {sort: {publishedAt: -1}, skip: 30 * (page - 1), limit: 30}, function (err, news) {
-          if(err){
+        News.find({ keyId: id }, {}, { sort: { publishedAt: -1 }, skip: 30 * (page - 1), limit: 30 }, function (err, news) {
+          if (err) {
             console.log(err);
-            // req.flash('err', err)
             res.redirect('back')
-          }else{
-            // req.flash('success', 'news search success.')
+          } else {
             res.render('result', {
               title: '新闻',
               news: news,
               key: key,
               pages: pages,
-              page: page,
-              // success: req.flash('success').toString(),
-              // error: req.flash('error').toString()
+              page: page
             })
           }
         })
@@ -135,44 +120,40 @@ exports.info = function (req, res) {
   }
 }
 
+exports.remove = function (req, res) {
+  let {id} = req.query
+  Key
+    .remove({ _id: id }, function (err) {
+      if (err) {
+        console.log('remove key error.');
+      }
+      res.send();
+    })
+}
+
 exports.news = function (req, res) {
   let {page} = req.query
-  let pages, key
+  let pages
   page = page || 1
-    Key.findOne({}, {}, function (err, result) {
-      if(err){
-        console.log(err);
-        // req.flash('err', err)
-        res.redirect('back')
-      }else{
-        key = result
-      }
-    })
-    News.find({}, {}, function (err, news) {
-      if(err){
-        console.log(err);
-        // req.flash('err', err)
-        res.redirect('back')
-      }else{
-        pages = news.length % 30 === 0 ? news.length / 30 : parseInt(news.length / 30 + 1);
-        News.find({}, {}, {sort: {publishedAt: -1}, skip: 30 * (page - 1), limit: 30}, function (err, news) {
-          if(err){
-            console.log(err);
-            // req.flash('err', err)
-            res.redirect('back')
-          }else{
-            // req.flash('success', 'news search success.')
-            res.render('news', {
-              title: '新闻',
-              news: news,
-              pages: pages,
-              page: page,
-              // success: req.flash('success').toString(),
-              // error: req.flash('error').toString()
-            })
-          }
-        })
-      }
-    })
-    
+  News.find({}, {}, function (err, news) {
+    if (err) {
+      console.log(err);
+      res.redirect('back')
+    } else {
+      pages = news.length % 30 === 0 ? news.length / 30 : parseInt(news.length / 30 + 1);
+      News.find({}, {}, { sort: { publishedAt: -1 }, skip: 30 * (page - 1), limit: 30 }, function (err, news) {
+        if (err) {
+          console.log(err);
+          res.redirect('back')
+        } else {
+          res.render('news', {
+            title: '新闻',
+            news: news,
+            pages: pages,
+            page: page
+          })
+        }
+      })
+    }
+  })
 }

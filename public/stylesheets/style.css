@@ -14,3 +14,15 @@ a {
 .split{
   height: 4px;
 }
+
+.key{
+  display: inline-block;
+}
+
+.remove:hover{
+  cursor: pointer;
+}
+
+.trash{
+  float: right;
+}

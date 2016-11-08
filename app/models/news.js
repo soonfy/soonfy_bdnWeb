@@ -15,7 +15,10 @@ const NewsSchema = new Schema({
   title: String,
   author: String,
   summary: String,
-  publishedAt: Date,  //新闻发布时间
+  publishedAt: {
+    type: Date,  //新闻发布时间
+    index: true
+  },
   createdAt: Date
 })
 
