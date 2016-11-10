@@ -17,6 +17,12 @@
   </div>
 <% } %>
 
+<% if(key && page == 1){ %>
+  <div class="container">
+    <div id="keyImg" data-id="<%= key._id %>"></div>
+  </div>
+<% } %>
+
   <div class="container">
     <% for(var i=0; i<news.length; i++) { %>
       <div class="panel panel-primary">
@@ -57,6 +63,8 @@
     <div class="col-xs-4"></div>
     <div class="col-xs-4">
       <ul class="pagination">
+        <li class="disabled"><a>本页：<%= news.length %>条</a></li>
+        <li class="disabled"><a><%= page %> / <%= pages %></a></li>
         <% if(page == 1){ %>
           <li class="disabled"><a>首页</a></li>
           <li class="active"><a><%= page %></a></li>
@@ -79,5 +87,7 @@
     <div class="col-xs-4"></div>
   </div>
 <% } %>
+
+<script src="/javascripts/echarts.js"></script>
 
   <%- include footer %>

@@ -19,10 +19,12 @@ a {
   display: inline-block;
 }
 
-.remove:hover{
+.right{
+  float: right;
   cursor: pointer;
 }
 
-.trash{
-  float: right;
+#keyImg{
+  width: 100%;
+  height: 400px;
 }

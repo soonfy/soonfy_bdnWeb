@@ -127,7 +127,12 @@ exports.remove = function (req, res) {
       if (err) {
         console.log('remove key error.');
       }
-      res.send();
+      News.remove({keyId: id}, function (err) {
+        if(err){
+          console.log('remove news error.');
+        }
+        res.send();
+      })
     })
 }
 
@@ -156,4 +161,46 @@ exports.news = function (req, res) {
       })
     }
   })
+}
+
+exports.count = function (req, res) {
+  let {id} = req.query
+  let promise = News.find({keyId: id}).sort({publishedAt: 1}).exec()
+  promise.then(function (news) {
+    let obj = {};
+    news.map(function (_news, index) {
+      let date = moment(_news.publishedAt).format('YYYY-MM-DD')
+      if(obj[date]){
+        obj[date]++
+      }else{
+        obj[date] = 1
+      }
+    })
+    let data = []
+    for(let key in obj){
+      let temp = [key, obj[key]]
+      if(data.length === 0){
+        data.push(temp)
+      }else{
+        let status = false;
+        for(let i = 0, len = data.length; i < len; i++){
+          if(data[i][0] > key){
+            data.splice(i, 0, temp)
+            status = true;
+          }
+        }
+        if(!status){
+          data.push(temp)
+        }
+      }
+    }
+    let chart = {
+      title: '关键词热度',
+      data
+    }
+    res.send(chart)
+  }).catch(function(error) {
+    console.log('error-', error);
+    res.send()
+  });
 }

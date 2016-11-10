@@ -24,12 +24,10 @@
       <div class="panel panel-primary <%= keys[i]._id %>">
         <div class="panel-heading">
           <div class="list-group-item">
-            <a href="/key/info?id=<%= keys[i]._id %>" target="_blank"  class="key">
-              <h4><%= keys[i].key %></h4>
-            </a>
-            <span class="remove list-group-item-danger">
-              <h4 class="trash glyphicon glyphicon-trash" data-id="<%= keys[i]._id %>"></h4>
-            </span>
+            <h4>
+              <a href="/key/info?id=<%= keys[i]._id %>" target="_blank"><%= keys[i].key %></a>
+              <span class="remove right list-group-item-danger glyphicon glyphicon-trash" data-id="<%= keys[i]._id %>"></span>
+            </h4>
           </div>
         </div>
         <ul class="list-group panel-info">
@@ -95,6 +93,6 @@
   </div>
 <% } %>
 
-<script src="javascripts/key.js"></script>
+<script src="/javascripts/key.js"></script>
 
   <%- include footer %>
