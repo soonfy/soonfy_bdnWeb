@@ -167,33 +167,19 @@ exports.count = function (req, res) {
   let {id} = req.query
   let promise = News.find({keyId: id}).sort({publishedAt: 1}).exec()
   promise.then(function (news) {
-    let obj = {};
-    news.map(function (_news, index) {
+    let sh = news.shift()
+    let _res = [[moment(sh.publishedAt).format('YYYY-MM-DD'), 1]];
+    for(let _news of news){
       let date = moment(_news.publishedAt).format('YYYY-MM-DD')
-      if(obj[date]){
-        obj[date]++
-      }else{
-        obj[date] = 1
+      let first = _res[0][0],
+        _date = first;
+      while(date !== _date){
+        _date = moment(moment(_date).add(1, 'days')).format('YYYY-MM-DD')
+        _res.unshift([_date, 0])
       }
-    })
-    let data = []
-    for(let key in obj){
-      let temp = [key, obj[key]]
-      if(data.length === 0){
-        data.push(temp)
-      }else{
-        let status = false;
-        for(let i = 0, len = data.length; i < len; i++){
-          if(data[i][0] > key){
-            data.splice(i, 0, temp)
-            status = true;
-          }
-        }
-        if(!status){
-          data.push(temp)
-        }
-      }
+      _res[0][1] += 1
     }
+    let data = _res.reverse()
     let chart = {
       title: '关键词热度',
       data
