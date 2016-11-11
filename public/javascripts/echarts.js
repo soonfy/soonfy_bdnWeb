@@ -4,7 +4,6 @@ $(function () {
   let id = $(img).data('id')
   let date = new Date(new Date().setDate(-15))
   let start = [date.getFullYear(), date.getMonth() + 1 < 10 ? '0' + date.getMonth() + 1 : date.getMonth() + 1, date.getDate() < 10 ? '0' + date.getDate() : date.getDate()].join('-')
-  alert(start)
   $.get('/key/count?id=' + id, function (chart) {
     console.log(chart);
     myChart.setOption(option = {
