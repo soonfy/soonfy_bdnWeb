@@ -1,5 +1,6 @@
 let Key = require('../models/key.js');
 let News = require('../models/news.js');
+let Count = require('../models/count.js');
 
 let moment = require('moment');
 
@@ -131,7 +132,12 @@ exports.remove = function (req, res) {
         if(err){
           console.log('remove news error.');
         }
-        res.send();
+        Count.remove({keyId: id}, function (err) {
+          if(err){
+            console.log('remove count error.');
+          }
+          res.send();
+        })
       })
     })
 }
@@ -165,21 +171,21 @@ exports.news = function (req, res) {
 
 exports.count = function (req, res) {
   let {id} = req.query
-  let promise = News.find({keyId: id}).sort({publishedAt: 1}).exec()
-  promise.then(function (news) {
-    let sh = news.shift()
-    let _res = [[moment(sh.publishedAt).format('YYYY-MM-DD'), 1]];
-    for(let _news of news){
-      let date = moment(_news.publishedAt).format('YYYY-MM-DD')
+  let promise = Count.find({keyId: id}).sort({publishedAt: 1}).exec()
+  promise.then(function (counts) {
+    let sh = counts.shift()
+    let _res = [[moment(sh.publishedAt).format('YYYY-MM-DD'), sh.count]];
+    for(let _count of counts){
+      let date = moment(_count.publishedAt).format('YYYY-MM-DD')
       let first = _res[0][0],
         _date = first;
       while(date !== _date){
         _date = moment(moment(_date).add(1, 'days')).format('YYYY-MM-DD')
-        _res.unshift([_date, 0])
+        _res.push([_date, 0])
       }
-      _res[0][1] += 1
+      _res[0][1] += sh.count;
     }
-    let data = _res.reverse()
+    let data = _res.reverse();
     let chart = {
       title: '关键词热度',
       data
