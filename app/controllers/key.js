@@ -173,19 +173,10 @@ exports.count = function (req, res) {
   let {id} = req.query
   let promise = Count.find({keyId: id}).sort({publishedAt: 1}).exec()
   promise.then(function (counts) {
-    let sh = counts.shift()
-    let _res = [[moment(sh.publishedAt).format('YYYY-MM-DD'), sh.count]];
+    let data = [];
     for(let _count of counts){
-      let date = moment(_count.publishedAt).format('YYYY-MM-DD')
-      let first = _res[0][0],
-        _date = first;
-      while(date !== _date){
-        _date = moment(moment(_date).add(1, 'days')).format('YYYY-MM-DD')
-        _res.push([_date, 0])
-      }
-      _res[0][1] += sh.count;
+      data.push([moment(_count.publishedAt).format('YYYY-MM-DD'), _count.count])
     }
-    let data = _res.reverse();
     let chart = {
       title: '关键词热度',
       data

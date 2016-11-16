@@ -35,9 +35,20 @@ $(function () {
       },
       dataZoom: [
         {
+          type: 'inside',
+          xAxisIndex: 0,
           startValue: start
-        }, {
-          type: 'inside'
+        },
+        {
+          type: 'slider',
+          xAxisIndex: 0,
+          startValue: start
+        },
+        {
+          type: 'inside',
+          yAxisIndex: 0,
+          start: 0,
+          end: 100
         }
       ],
       visualMap: {
@@ -48,22 +59,22 @@ $(function () {
           color: '#cc0033'
         }, {
             gt: 0,
-            lte: 10,
+            lte: 100,
             color: '#009966'
           }, {
-            gt: 10,
-            lte: 50,
+            gt: 100,
+            lte: 500,
             color: '#ffde33'
           }, {
-            gt: 50,
-            lte: 100,
+            gt: 500,
+            lte: 1000,
             color: '#ff9933'
           }, {
-            gt: 100,
-            lte: 200,
-            color: '#cc0033'
+            gt: 1000,
+            lte: 2000,
+            color: '#ff7f50'
           }, {
-            gt: 200,
+            gt: 2000,
             color: '#660099'
           }],
         outOfRange: {
@@ -79,13 +90,13 @@ $(function () {
         markLine: {
           silent: true,
           data: [{
-            yAxis: 10
+            yAxis: 100
           }, {
-              yAxis: 50
+              yAxis: 1000
             }, {
-              yAxis: 100
+              yAxis: 5000
             }, {
-              yAxis: 200
+              yAxis: 10000
             }]
         }
       }
