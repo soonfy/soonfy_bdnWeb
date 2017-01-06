@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const KeySchema = new Schema({
-  key: {              // keys-西游 伏妖 (周星驰 | 徐克) -(西游降魔 | 大闹天宫)
+  key: {              //唯一key， keys-西游 伏妖 (周星驰 | 徐克) -(西游降魔 | 大闹天宫)
+    type: String,
+    index: true,
+    unique: true
+  },
+  title:{             //标识名称不唯一
     type: String,
     index: true
   },

@@ -5,9 +5,8 @@ let Count = require('../models/count.js');
 let moment = require('moment');
 
 exports.insert = function (req, res) {
-  let {keyword, tn} = req.body;
+  let {title, keyword, tn} = req.body;
   let key = ' ' + keyword + ' ';
-  console.log(key);
   if (key) {
     Key.findOne({ key: key, tn: tn }, {}, function (err, result) {
       if (err) {
@@ -32,7 +31,8 @@ exports.insert = function (req, res) {
           }
         }
         let _key = new Key({
-          key: key,
+          title,
+          key,
           q1,
           q3,
           q4,

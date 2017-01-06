@@ -25,12 +25,22 @@
         <div class="panel-heading">
           <div class="list-group-item">
             <h4>
-              <a href="/key/info?id=<%= keys[i]._id %>" target="_blank"><%= keys[i].key %></a>
-              <span class="remove right list-group-item-danger glyphicon glyphicon-trash" data-id="<%= keys[i]._id %>"></span>
+              <a href="/key/info?id=<%= keys[i]._id %>" target="_blank"><%= keys[i].title || keys[i].key %></a>
+              <button type="button" class="btn btn-default right">
+                <span class="remove list-group-item-danger glyphicon glyphicon-trash" data-id="<%= keys[i]._id %>"></span>
+              </button>
+              <button type="button" class="btn btn-default right">
+                <span class="list-group-item-info glyphicon glyphicon-download" data-id="<%= keys[i]._id %>"></span>
+              </button>
             </h4>
           </div>
         </div>
         <ul class="list-group panel-info">
+          <li class="list-group-item list-group-item-info">
+            <strong class="list-group-item-heading">关键词汇总：</strong>
+            <span class="list-group-item-text"><%= keys[i].key %></span>
+          </li>
+          <div class="split"></div>
           <li class="list-group-item list-group-item-info">
             <strong class="list-group-item-heading">查询关键词位置：</strong>
             <span class="list-group-item-text"><%= keys[i].tn %></span>
