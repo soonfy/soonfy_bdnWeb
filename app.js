@@ -39,8 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
 //connect mongodb
-var dburl = 'mongodb://normal:Joke123@ant09.idatage.com:27021/tarantula'
-// var dburl = 'mongodb://localhost/baidu_news'
+var dburl = 'mongodb://localhost/baidu_news'
 mongoose.connect(dburl)
 mongoose.set('debug', true)             //mongo debug
 
