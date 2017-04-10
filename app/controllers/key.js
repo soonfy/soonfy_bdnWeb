@@ -6,6 +6,9 @@ let moment = require('moment');
 
 exports.insert = function (req, res) {
   let {title, keyword, tn} = req.body;
+  if (!keyword.trim()) {
+    return res.redirect('/')
+  }
   let key = ' ' + keyword + ' ';
   if (key) {
     Key.findOne({ key: key, tn: tn }, {}, function (err, result) {
@@ -175,7 +178,7 @@ exports.count = function (req, res) {
   promise.then(function (counts) {
     let data = [];
     for(let _count of counts){
-      data.push([moment(_count.publishedAt).format('YYYY-MM-DD'), _count.count])
+      data.push([_count.date, _count.count])
     }
     let chart = {
       title: '关键词热度',

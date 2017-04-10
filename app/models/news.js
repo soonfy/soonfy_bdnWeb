@@ -2,23 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const NewsSchema = new Schema({
-  _id: {        //关键词_id+新闻url
+  _id: {        //时间date+关键词_id+新闻url
     type: String,
     index: true,
     unique: true
   },
-  keyId: {
-    type: String,  //关键词_id
-    index: true
-  },
+  keyId: String,  //关键词_id
   url: String,
   title: String,
   author: String,
   summary: String,
-  publishedAt: {
-    type: Date,  //新闻发布时间
-    index: true
-  },
+  publishedAt: Date,  //新闻发布时间
+  date: String,
   createdAt: Date
 })
 
