@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var debug = require('debug')('bdn_website:server');
 
-var mongoose = require('mongoose')            //connect mongodb
+var mongoose = require('mongoose') //connect mongodb
 
 
 // var session = require('express-session')
@@ -32,16 +32,25 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
+let dburl = process.argv[2] || '';
+console.log('mongodb url', dburl);
 
 //connect mongodb
-var dburl = 'mongodb://localhost/baidu_news'
+// var dburl = 'mongodb://localhost/baidu_news'
+
 mongoose.connect(dburl)
-mongoose.set('debug', true)             //mongo debug
+
+// mongoose.createConnection(dburl, {
+//   authenticationDatabase: 'admin'
+// })
+// mongoose.set('debug', true) //mongo debug
 
 //insert session to mongodb
 //session config before route config
@@ -60,7 +69,7 @@ mongoose.set('debug', true)             //mongo debug
 app.use('/', routes);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -71,7 +80,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -82,7 +91,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
@@ -93,6 +102,6 @@ app.use(function(err, req, res, next) {
 app.set('port', 3040);
 console.log('server is running at port 3040.');
 
-var server = app.listen(app.get('port'), function() {
+var server = app.listen(app.get('port'), function () {
   debug('Express server listening on port ' + server.address().port);
 });

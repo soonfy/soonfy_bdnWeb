@@ -30,6 +30,10 @@
             <strong class="list-group-item-heading">新闻采集时间：</strong>
             <span class="list-group-item-text"><%= moment(news[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %></span>
           </li>
+          <li class="list-group-item list-group-item-info">
+            <strong class="list-group-item-heading">新闻关键词：</strong>
+            <span class="list-group-item-text"><%= news[i].key %></span>
+          </li>
         </ul>
       </div>
     <% } %>

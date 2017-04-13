@@ -20,8 +20,12 @@ router.get('/key/info', Key.info);
 
 router.get('/key/count', Key.count);
 
-router.delete('/key/remove', Key.remove)
+router.delete('/key/remove', Key.remove);
+
+router.get('/key/download', Key.download);
 
 router.get('/news', Key.news);
+
+router.get('/search', Key.search);
 
 module.exports = router;
