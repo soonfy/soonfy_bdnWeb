@@ -304,7 +304,7 @@ exports.search = (req, res) => {
   promise.then((keys) => {
     pages = keys.length % 30 === 0 ? keys.length / 30 : parseInt(keys.length / 30 + 1);
     res.render('search', {
-      title: '查询结果',
+      title: '关键词',
       keyword: keyword,
       keys: keys,
       pages: pages,
