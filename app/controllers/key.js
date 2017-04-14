@@ -18,8 +18,10 @@ exports.insert = function (req, res) {
   let {
     title,
     keyword,
-    tn
+    tn,
+    date
   } = req.body;
+  date = date ? new Date(date) : new Date();
   if (!keyword.trim()) {
     res.locals.msg.err = '添加失败，关键词不能为空。'
     res.render('index', {
@@ -72,7 +74,8 @@ exports.insert = function (req, res) {
           tn,
           isCrawled: 0,
           createdAt: new Date(),
-          updatedAt: new Date(moment().subtract(2, 'days'))
+          start: date,
+          updatedAt: date
         })
         _key.save(function (error) {
           if (error) {
@@ -317,7 +320,6 @@ exports.search = (req, res) => {
   } = req.query,
     pages;
   let reg = new RegExp(keyword, 'igm');
-  console.log(reg);
   let promise = KeyModel.find({
     $or: [{
       title: reg
@@ -328,7 +330,6 @@ exports.search = (req, res) => {
     publishedAt: 1
   }).skip(30 * (page - 1)).limit(30).exec();
   promise.then((keys) => {
-    console.log(keys);
     pages = keys.length % 30 === 0 ? keys.length / 30 : parseInt(keys.length / 30 + 1);
     res.render('search', {
       title: '关键词',

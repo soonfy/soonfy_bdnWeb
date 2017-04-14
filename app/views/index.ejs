@@ -15,6 +15,10 @@
 
             <div class="row col-xs-6">
               <h3><strong>添加关键词</strong></h3>
+              <div class="form-group">
+                <span></span>
+              </div>
+              
               <form class="form-horizontal" method="POST" action="/key/insert">
                 <div class="form-group">
                   <label class="radio-inline">
@@ -24,6 +28,12 @@
             <label><input type="radio" name="tn" value="newstitledy" />标题</label>
                   </label>
                 </div>
+                <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon" id="sizing-addon">起始时间</span>
+                  <input type="date" name="date" class="form-control" aria-describedby="sizing-addon">
+                </div>
+              </div>
                 <div class="form-group">
                   <input type="text" name="title" class="form-control" placeholder="请输入标识名称" />
                 </div>
@@ -61,7 +71,7 @@
       </div>
     </div>
   </div>
-  
+
   <script src="/javascripts/key.js"></script>
 
   <%- include footer %>
