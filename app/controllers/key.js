@@ -34,7 +34,7 @@ exports.insert = function (req, res) {
       tn: tn
     }, {}, function (error, result) {
       if (error) {
-        res.locals.msg.err= '添加失败，关键词不符合逻辑。'
+        res.locals.msg.err = '添加失败，关键词不符合逻辑。'
         res.render('index', {
           title: '首页'
         })
@@ -75,14 +75,14 @@ exports.insert = function (req, res) {
           updatedAt: new Date(moment().subtract(2, 'days'))
         })
         _key.save(function (error) {
-          if (!error) {
+          if (error) {
             res.locals.msg.err = '添加失败，关键词不符合逻辑。'
             res.render('index', {
               title: '首页'
             })
             return;
           } else {
-            res.locals.msg.err = '添加成功。'
+            res.locals.msg.suc = '添加成功。'
             res.render('index', {
               title: '首页'
             })
@@ -105,9 +105,9 @@ exports.list = function (req, res) {
     page = page || 1
     let pages;
     KeyModel.find({
-      isCrawled: {
-        $in: [0, 1, 2]
-      }
+      // isCrawled: {
+      //   $in: [0, 1, 2]
+      // }
     }, function (error, keys) {
       if (error) {
         console.error(error);
@@ -115,9 +115,9 @@ exports.list = function (req, res) {
       } else {
         pages = keys.length % 30 === 0 ? keys.length / 30 : parseInt(keys.length / 30 + 1);
         KeyModel.find({
-          isCrawled: {
-            $in: [0, 1, 2]
-          }
+          // isCrawled: {
+          //   $in: [0, 1, 2]
+          // }
         }, {}, {
           sort: {
             createdAt: -1
@@ -210,12 +210,15 @@ exports.remove = function (req, res) {
     id
   } = req.query
   KeyModel
-    .update({
+    // .update({
+    //   _id: id
+    // }, {
+    //   $set: {
+    //     isCrawled: 3
+    //   }
+    // }, function (error) {
+    .remove({
       _id: id
-    }, {
-      $set: {
-        isCrawled: 3
-      }
     }, function (error) {
       if (error) {
         console.error('remove key error.');
@@ -314,6 +317,7 @@ exports.search = (req, res) => {
   } = req.query,
     pages;
   let reg = new RegExp(keyword, 'igm');
+  console.log(reg);
   let promise = KeyModel.find({
     $or: [{
       title: reg
@@ -322,8 +326,9 @@ exports.search = (req, res) => {
     }]
   }).sort({
     publishedAt: 1
-  }).exec();
+  }).skip(30 * (page - 1)).limit(30).exec();
   promise.then((keys) => {
+    console.log(keys);
     pages = keys.length % 30 === 0 ? keys.length / 30 : parseInt(keys.length / 30 + 1);
     res.render('search', {
       title: '关键词',
