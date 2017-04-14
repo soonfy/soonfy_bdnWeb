@@ -1,28 +1,40 @@
 <%- include header %>
 
   <div class="container">
-    <div class="row col-xs-6">
-      <h3><strong>添加关键词</strong></h3>
-      <form class="form-horizontal" method="POST" action="/key/insert">
-        <div class="form-group">
-          <label class="radio-inline">
+
+    <% if (msg.suc){ %>
+      <div class="alert alert-success" role="alert">
+        <%= msg.suc %>
+      </div>
+      <% } %>
+        <% if (msg.err){ %>
+          <div class="alert alert-danger" role="alert">
+            <%= msg.err %>
+          </div>
+          <% } %>
+
+            <div class="row col-xs-6">
+              <h3><strong>添加关键词</strong></h3>
+              <form class="form-horizontal" method="POST" action="/key/insert">
+                <div class="form-group">
+                  <label class="radio-inline">
             <label><input type="radio" name="tn" value="newsdy" checked />全文</label>
-          </label>
-          <label class="radio-inline">
+                  </label>
+                  <label class="radio-inline">
             <label><input type="radio" name="tn" value="newstitledy" />标题</label>
-          </label>
-        </div>
-        <div class="form-group">
-          <input type="text" name="title" class="form-control" placeholder="请输入标识名称" />
-        </div>
-        <div class="form-group">
-          <input type="text" name="keyword" class="form-control" placeholder="请输入关键词" />
-        </div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-default navbar-btn">添加</button>
-        </div>
-      </form>
-    </div>
+                  </label>
+                </div>
+                <div class="form-group">
+                  <input type="text" name="title" class="form-control" placeholder="请输入标识名称" />
+                </div>
+                <div class="form-group">
+                  <input type="text" name="keyword" class="form-control" placeholder="请输入关键词" />
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-default navbar-btn">添加</button>
+                </div>
+              </form>
+            </div>
   </div>
 
   <div class="container">
@@ -49,5 +61,7 @@
       </div>
     </div>
   </div>
+  
+  <script src="/javascripts/key.js"></script>
 
   <%- include footer %>

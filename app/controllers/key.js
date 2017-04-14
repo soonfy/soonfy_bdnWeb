@@ -14,13 +14,18 @@ const domain = require('domain').create();
  *  @description 添加关键词
  */
 exports.insert = function (req, res) {
+  res.locals.msg = {}
   let {
     title,
     keyword,
     tn
   } = req.body;
   if (!keyword.trim()) {
-    return res.redirect('/')
+    res.locals.msg.err = '添加失败，关键词不能为空。'
+    res.render('index', {
+      title: '首页'
+    })
+    return;
   }
   let key = ' ' + keyword + ' ';
   if (key) {
@@ -29,9 +34,17 @@ exports.insert = function (req, res) {
       tn: tn
     }, {}, function (error, result) {
       if (error) {
-        return res.redirect('/')
+        res.locals.msg.err= '添加失败，关键词不符合逻辑。'
+        res.render('index', {
+          title: '首页'
+        })
+        return;
       } else if (result !== null) {
-        return res.redirect('/')
+        res.locals.msg.err = '添加失败，关键词重复。'
+        res.render('index', {
+          title: '首页'
+        })
+        return;
       } else {
         let query = key.replace(/\s+-\(/g, ' #@#q4: ').replace(/\s+\(/g, ' #@#q3: ').replace(/site:/g, ' #@#site: ').replace(/\)\s+/g, ' #@# ')
         let keys = query.split(/#@#/)
@@ -63,9 +76,17 @@ exports.insert = function (req, res) {
         })
         _key.save(function (error) {
           if (!error) {
-            res.redirect('/')
+            res.locals.msg.err = '添加失败，关键词不符合逻辑。'
+            res.render('index', {
+              title: '首页'
+            })
+            return;
           } else {
-            res.redirect('/')
+            res.locals.msg.err = '添加成功。'
+            res.render('index', {
+              title: '首页'
+            })
+            return;
           }
         })
       }
@@ -193,8 +214,9 @@ exports.remove = function (req, res) {
       _id: id
     }, {
       $set: {
-      isCrawled: 3
-    }}, function (error) {
+        isCrawled: 3
+      }
+    }, function (error) {
       if (error) {
         console.error('remove key error.');
       }

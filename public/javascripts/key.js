@@ -18,4 +18,8 @@ $(function () {
     //   url: '/key/download?id=' + id
     // })
   })
+
+  setTimeout(function () {
+    $('div.alert').fadeOut();
+  }, 1000 * 2);
 })
