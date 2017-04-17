@@ -10,7 +10,6 @@
   <script src="/jquery/dist/jquery.min.js"></script>
   <link rel='stylesheet' href='/bootstrap/dist/css/bootstrap.min.css' />
   <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="/echarts/dist/echarts.min.js"></script>
 </head>
 
 <body>
@@ -19,16 +18,10 @@
       <ul class="nav nav-tabs nav-justified" role="navigation">
         <% if(title === '关键词'){ %>
         <li role="presentation"><a href="/">主页</a></li>
-        <li role="presentation" class="active"><a href="/key">关键词</a></li>
-        <li role="presentation"><a href="/news">新闻</a></li>
-        <% }else if(title === '新闻'){ %>
-        <li role="presentation"><a href="/">主页</a></li>
-        <li role="presentation"><a href="/key">关键词</a></li>
-        <li role="presentation" class="active"><a href="/news">新闻</a></li>
+        <li role="presentation" class="active"><a>关键词</a></li>
         <% }else{ %>
-        <li role="presentation" class="active"><a href="/">主页</a></li>
+        <li role="presentation" class="active"><a>主页</a></li>
         <li role="presentation"><a href="/key">关键词</a></li>
-        <li role="presentation"><a href="/news">新闻</a></li>
         <% } %>
       </ul>
     </div>

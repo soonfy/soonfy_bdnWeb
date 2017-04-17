@@ -1,12 +1,17 @@
 let KeyModel = require('../models/key.js');
 let NewsModel = require('../models/news.js');
-let CountModel = require('../models/count.js');
-
-let moment = require('moment');
 
 let path = require('path');
 let fs = require('fs');
 let iconv_lite = require('iconv-lite');
+let elasticsearch = require('elasticsearch');
+
+let esurl = process.argv[3] || 'null';
+const client = new elasticsearch.Client({
+  hosts: [
+    esurl
+  ]
+});
 
 const domain = require('domain').create();
 
@@ -107,21 +112,13 @@ exports.list = function (req, res) {
     } = req.query
     page = page || 1
     let pages;
-    KeyModel.find({
-      // isCrawled: {
-      //   $in: [0, 1, 2]
-      // }
-    }, function (error, keys) {
+    KeyModel.find({}, function (error, keys) {
       if (error) {
         console.error(error);
         res.redirect('back')
       } else {
         pages = keys.length % 30 === 0 ? keys.length / 30 : parseInt(keys.length / 30 + 1);
-        KeyModel.find({
-          // isCrawled: {
-          //   $in: [0, 1, 2]
-          // }
-        }, {}, {
+        KeyModel.find({}, {}, {
           sort: {
             createdAt: -1
           },
@@ -156,8 +153,16 @@ exports.info = function (req, res) {
     id,
     page
   } = req.query
-  let pages, key
+  let pages, key, perPage = 30
   page = page || 1
+
+  let searchParams = {
+    index: 'baidunews_news',
+    type: 'baidunews_news',
+    from: (page - 1) * perPage,
+    size: perPage,
+    q: `keyId:${id}`
+  };
   if (id) {
     KeyModel.findOne({
       _id: id
@@ -169,39 +174,19 @@ exports.info = function (req, res) {
         key = result
       }
     })
-    NewsModel.find({
-      keyId: id
-    }, {}, function (error, news) {
+    client.search(searchParams, function (error, resp) {
       if (error) {
         console.error(error);
         res.redirect('back')
-      } else {
-        pages = news.length % 30 === 0 ? news.length / 30 : parseInt(news.length / 30 + 1);
-
-        NewsModel.find({
-          keyId: id
-        }, {}, {
-          sort: {
-            publishedAt: -1
-          },
-          skip: 30 * (page - 1),
-          limit: 30
-        }, function (error, news) {
-          if (error) {
-            console.error(error);
-            res.redirect('back')
-          } else {
-            res.render('result', {
-              title: '新闻',
-              news: news,
-              key: key,
-              pages: pages,
-              page: page
-            })
-          }
-        })
       }
-    })
+      res.render('result', {
+        title: '关键词',
+        key: key,
+        news: resp.hits ? resp.hits.hits : [],
+        page: page,
+        pages: resp.hits ? Math.ceil(resp.hits.total / perPage) : 0
+      });
+    });
   }
 }
 
@@ -213,101 +198,31 @@ exports.remove = function (req, res) {
     id
   } = req.query
   KeyModel
-    // .update({
-    //   _id: id
-    // }, {
-    //   $set: {
-    //     isCrawled: 3
-    //   }
-    // }, function (error) {
     .remove({
       _id: id
     }, function (error) {
       if (error) {
         console.error('remove key error.');
       }
-      NewsModel.remove({
-        keyId: id
-      }, function (error) {
-        if (error) {
-          console.error('remove news error.');
-        }
-        CountModel.remove({
-          keyId: id
-        }, function (error) {
-          if (error) {
-            console.error('remove count error.');
+      client.deleteByQuery({
+        index: 'baidunews_news',
+        type: 'baidunews_news',
+        body: {
+          query: {
+            term: {
+              keyId: id
+            }
           }
-          res.send();
-        })
-      })
-    })
-}
-
-/**
- *  @description 新闻列表
- */
-exports.news = function (req, res) {
-  let {
-    page
-  } = req.query
-  let pages
-  page = page || 1
-  NewsModel.find({}, {}, function (error, news) {
-    if (error) {
-      console.error(error);
-      res.redirect('back')
-    } else {
-      pages = news.length % 30 === 0 ? news.length / 30 : parseInt(news.length / 30 + 1);
-      NewsModel.find({}, {}, {
-        sort: {
-          publishedAt: -1
-        },
-        skip: 30 * (page - 1),
-        limit: 30
-      }, function (error, news) {
-        if (error) {
-          console.error(error);
-          res.redirect('back')
-        } else {
-          res.render('news', {
-            title: '新闻',
-            news: news,
-            pages: pages,
-            page: page
-          })
         }
-      })
-    }
-  })
-}
-
-/**
- *  @description 关键词新闻统计
- */
-exports.count = function (req, res) {
-  let {
-    id
-  } = req.query
-  let promise = CountModel.find({
-    keyId: id
-  }).sort({
-    publishedAt: 1
-  }).exec()
-  promise.then(function (counts) {
-    let data = [];
-    for (let _count of counts) {
-      data.push([_count.date, _count.count])
-    }
-    let chart = {
-      title: '关键词热度',
-      data
-    }
-    res.send(chart)
-  }).catch(function (error) {
-    console.error(error);
-    res.send()
-  });
+      }, function (error, response) {
+        if (error) {
+          console.error(error.message);
+        } else {
+          console.log(response);
+        }
+        res.send();
+      });
+    })
 }
 
 /**
@@ -354,32 +269,42 @@ exports.download = function (req, res) {
   KeyModel.findOne({
     _id: id
   }, (error, key) => {
-    NewsModel.find({
-      keyId: id
-    }, {}, {
-      sort: {
-        createdAt: 1
+    var allNews = [];
+    client.search({
+      index: 'baidunews_news',
+      type: 'baidunews_news',
+      scroll: '30s',
+      q: `keyId:${id}`
+    }, function getMoreUntilDone(error, response) {
+      response.hits.hits.forEach(function (hit) {
+        allNews.push(hit._source);
+      });
+
+      if (response.hits.total > allNews.length) {
+        client.scroll({
+          scrollId: response._scroll_id,
+          scroll: '30s'
+        }, getMoreUntilDone);
+      } else {
+        let filename = `${key.title}.csv`
+        let filepath = path.join(__dirname, '../../data', filename)
+        let head = `标识,关键词,新闻标题,新闻作者,新闻摘要,新闻链接,新闻发表时间,新闻采集时间\r\n`
+        head = iconv_lite.encode(head, 'gbk')
+        fs.writeFileSync(filepath, head)
+        allNews.map(_news => {
+          let metas = [key.title, key.key, _news.title.replace(/,/g, '，'), _news.author.replace(/,/g, '，'), _news.summary.replace(/,/g, '，'), _news.url, _news.publishedAt, _news.createdAt]
+          let line = metas.join(',') + '\r\n'
+          line = iconv_lite.encode(line, 'gbk')
+          fs.appendFileSync(filepath, line)
+        })
+        res.download(filepath, filename, (error) => {
+          if (error) {
+            console.error(error);
+          } else {
+            console.log('download success.');
+          }
+        })
       }
-    }, (error, news) => {
-      let title = key.title
-      let filename = `${title}.csv`
-      let filepath = path.join(__dirname, '../../data', filename)
-      let head = `标识,关键词,新闻标题,新闻作者,新闻摘要,新闻链接,新闻发表时间,新闻采集时间\r\n`
-      head = iconv_lite.encode(head, 'gbk')
-      fs.writeFileSync(filepath, head)
-      news.map(_news => {
-        let metas = [title, _news.key, _news.title.replace(/,/g, '，'), _news.author.replace(/,/g, '，'), _news.summary.replace(/,/g, '，'), _news.url, _news.publishedAt, _news.createdAt]
-        let line = metas.join(',') + '\r\n'
-        line = iconv_lite.encode(line, 'gbk')
-        fs.appendFileSync(filepath, line)
-      })
-      res.download(filepath, filename, (error) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log('download success.');
-        }
-      })
-    })
+    });
   });
 }

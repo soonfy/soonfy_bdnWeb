@@ -9,11 +9,6 @@ var debug = require('debug')('bdn_website:server');
 
 var mongoose = require('mongoose') //connect mongodb
 
-
-// var session = require('express-session')
-// var mongoStore = require('connect-mongo')(session)        //insert session to mongodb
-// var flash = require('connect-flash')          //store info in session
-
 var routes = require('./routes/index');
 
 var app = express();
@@ -24,12 +19,6 @@ app.locals.moment = require('moment')
 app.set('views', path.join(__dirname, 'app', 'views'));
 app.set('view engine', 'ejs');
 
-//flash store info
-// app.use(flash())
-
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -39,32 +28,15 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
-let dburl = process.argv[2] || '';
+
+if (process.argv.length < 4) {
+  console.error(`缺少参数。mongo url + es url`);
+  process.exit();
+}
+
+let dburl = process.argv[2] || 'null';
 console.log('mongodb url', dburl);
-
-//connect mongodb
-// var dburl = 'mongodb://localhost/baidu_news'
-
 mongoose.connect(dburl)
-
-// mongoose.createConnection(dburl, {
-//   authenticationDatabase: 'admin'
-// })
-// mongoose.set('debug', true) //mongo debug
-
-//insert session to mongodb
-//session config before route config
-// app.use(session({
-//   secret: 'baidunews_users',
-//   key: 'baidu_news',
-//   cookie: {maxAge: 1000 * 60 * 60 * 24},
-//   restore: false,
-//   saveUninitialized: true,
-//   store: new mongoStore({
-//     url: dburl,
-//     collections: 'sessions'
-//   })
-// }))
 
 app.use('/', routes);
 
