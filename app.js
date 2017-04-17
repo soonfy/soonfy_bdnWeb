@@ -29,11 +29,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
+console.log(process.argv);
 if (process.argv.length < 4) {
   console.error(`缺少参数。mongo url + es url`);
   process.exit();
 }
-
 let dburl = process.argv[2] || 'null';
 console.log('mongodb url', dburl);
 mongoose.connect(dburl)
