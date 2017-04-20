@@ -42,6 +42,7 @@ exports.insert = function (req, res) {
     }, {}, function (error, result) {
       if (error) {
         res.locals.msg.err = '添加失败，关键词不符合逻辑。'
+        console.error(`find key error.`);
         res.render('index', {
           title: '首页'
         })
@@ -85,6 +86,7 @@ exports.insert = function (req, res) {
         _key.save(function (error) {
           if (error) {
             res.locals.msg.err = '添加失败，关键词不符合逻辑。'
+            console.error(`save key error.`);
             res.render('index', {
               title: '首页'
             })
