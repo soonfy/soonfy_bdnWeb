@@ -22,33 +22,35 @@ exports.insert = function (req, res) {
   res.locals.msg = {}
   let {
     title,
-    keyword,
+    q1,
+    q3,
+    q4,
     tn,
     date
   } = req.body;
   date = date ? new Date(date) : new Date();
-  if (!keyword.trim()) {
-    res.locals.msg.err = '添加失败，关键词不能为空。'
+  if (!(q1.trim() || q3.trim() || q4.trim())) {
+    res.locals.msg.err = `需求 ${title} 添加失败。所有关键词不能同时为空。`
     res.render('index', {
       title: '首页'
     })
     return;
   }
-  let key = ' ' + keyword + ' ';
+  let key = '[' + q1 + '] + ' + q3 + ' - ' + q4;
   if (key) {
     KeyModel.findOne({
       key: key,
       tn: tn
     }, {}, function (error, result) {
       if (error) {
-        res.locals.msg.err = '添加失败，关键词不符合逻辑。'
+        res.locals.msg.err = `需求 ${title} 添加失败。`
         console.error(`find key error.`);
         res.render('index', {
           title: '首页'
         })
         return;
       } else if (result !== null) {
-        res.locals.msg.err = '添加失败，关键词重复。'
+        res.locals.msg.err = `需求 ${title} 添加失败。所有关键词重复。`
         res.render('index', {
           title: '首页'
         })
@@ -56,19 +58,7 @@ exports.insert = function (req, res) {
       } else {
         let query = key.replace(/\s+-\(/g, ' #@#q4: ').replace(/\s+\(/g, ' #@#q3: ').replace(/site:/g, ' #@#site: ').replace(/\)\s+/g, ' #@# ')
         let keys = query.split(/#@#/)
-        let q1 = q3 = q4 = q6 = ''
-        let s = 2
-        for (let str of keys) {
-          if (str.trim() && str.indexOf('q3: ') > -1) {
-            q3 = str.replace('q3: ', '').trim()
-          } else if (str.trim() && str.indexOf('q4: ') > -1) {
-            q4 = str.replace('q4: ', '').trim()
-          } else if (str.trim() && str.indexOf('site: ') > -1) {
-            q6 = str.replace('site: ', '').replace('(', '').replace(')', '').trim()
-          } else if (str.trim()) {
-            q1 = str.trim()
-          }
-        }
+        let q6 = '', s = 2
         let _key = new KeyModel({
           title,
           key,
@@ -85,14 +75,14 @@ exports.insert = function (req, res) {
         })
         _key.save(function (error) {
           if (error) {
-            res.locals.msg.err = '添加失败，关键词不符合逻辑。'
+            res.locals.msg.err = `需求 ${title} 添加失败。`
             console.error(`save key error.`);
             res.render('index', {
               title: '首页'
             })
             return;
           } else {
-            res.locals.msg.suc = '添加成功。'
+            res.locals.msg.suc = `需求 ${title} 添加成功。`
             res.render('index', {
               title: '首页'
             })
