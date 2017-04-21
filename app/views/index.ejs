@@ -21,6 +21,9 @@
 
               <form class="form-horizontal" method="POST" action="/key/insert">
                 <div class="form-group">
+                  <input type="text" name="title" class="form-control" placeholder="请输入需求名称" />
+                </div>
+                <div class="form-group">
                   <label class="radio-inline">
                     <label><input type="radio" name="tn" value="newsdy" checked />全文</label>
                   </label>
@@ -33,9 +36,6 @@
                     <span class="input-group-addon" id="sizing-addon">起始时间</span>
                     <input type="date" name="date" class="form-control" aria-describedby="sizing-addon">
                   </div>
-                </div>
-                <div class="form-group">
-                  <input type="text" name="title" class="form-control" placeholder="请输入需求名称" />
                 </div>
                 <div class="form-group">
                   <input type="text" name="q1" class="form-control" placeholder="全部同时包含的关键词" />
@@ -59,21 +59,18 @@
         <h3 class="panel-title">关键词添加方法</h3>
       </div>
       <div class="panel-body">
-        <strong>1.查询关键词位置</strong>
-        <p>例如，查询在全文(newsdy)中包含的新闻：选择“全文”，查询在标题(newstitledy)中包含的新闻：选择“标题”。默认是全文检索。</p>
-        <strong>2.查询包含以下全部的关键词</strong>
-        <p>例如，查询同时包含“优数”和“数太奇”的新闻：优数 数太奇</p>
-        <strong>3.查询包含以下任意一个关键词</strong>
-        <p>例如，查询包含“清研”或者“清智”的新闻：(清研 | 清智)</p>
-        <strong>4.查询不包含以下关键词</strong>
-        <p>例如，查询不包含“清华”或者“青烟”的新闻：-(清华 | 青烟)</p>
-        <strong>5.查询限定的新闻源</strong><em><a target="black" href="https://www.baidu.com/search/resources.html">新闻源列表</a></em>
-        <p>例如，查询“人民网”或者“新华网”的新闻：site:(人民网 | 新华网)</p>
-        <strong>6.条件汇总</strong>
-        <p>优数 数太奇 (清研 | 清智) -(清华 | 青烟) site:(人民网 | 新华网)</p>
-      </div>
-      <div class="panel-footer">
-        <span><strong>***</strong>所有符号均为英文符号，不同条件之间以空格分割。</span>
+        <strong>1.需求名称</strong>
+        <p>方便的查找的标识名称，可以和其他需求名称重复。</p>
+        <strong>2.关键词位置</strong>
+        <p>选择关键词在新闻中匹配的位置，全文匹配还是仅匹配标题，默认是全文匹配。</p>
+        <strong>3.起始时间</strong>
+        <p>选择新闻监测的起始时间（包含），默认是添加的当天。</p>
+        <strong>4.包含全部的关键词</strong>
+        <p>新闻中必须包含输入框中全部的关键词就匹配到。词与词之间通过空格分割。</p>
+        <strong>5.包含任意一个关键词</strong>
+        <p>新闻中只要包含输入框中任意一个的关键词就匹配到。词与词之间通过空格分割。</p>
+        <strong>6.查询不包含任意一个关键词</strong>
+        <p>新闻中只要包含输入框中任意一个的关键词就排除掉。词与词之间通过空格分割。</p>
       </div>
     </div>
   </div>

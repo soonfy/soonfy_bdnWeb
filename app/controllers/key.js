@@ -40,8 +40,11 @@ exports.insert = function (req, res) {
   if (key) {
     KeyModel.findOne({
       key: key,
-      tn: tn
-    }, {}, function (error, result) {
+      tn: tn,
+      isCrawled: {
+        $ne: 3
+      }
+    }, function (error, result) {
       if (error) {
         res.locals.msg.err = `需求 ${title} 添加失败。`
         console.error(`find key error.`);
@@ -56,10 +59,9 @@ exports.insert = function (req, res) {
         })
         return;
       } else {
-        let query = key.replace(/\s+-\(/g, ' #@#q4: ').replace(/\s+\(/g, ' #@#q3: ').replace(/site:/g, ' #@#site: ').replace(/\)\s+/g, ' #@# ')
-        let keys = query.split(/#@#/)
-        let q6 = '', s = 2
-        let _key = new KeyModel({
+        let q6 = '',
+          s = 2
+        let _key = {
           title,
           key,
           q1,
@@ -72,8 +74,8 @@ exports.insert = function (req, res) {
           createdAt: new Date(),
           start: date,
           updatedAt: date
-        })
-        _key.save(function (error) {
+        }
+        KeyModel.findOneAndUpdate({ key, key }, { $set: _key }, { upsert: true }, function(err, resp){
           if (error) {
             res.locals.msg.err = `需求 ${title} 添加失败。`
             console.error(`save key error.`);
@@ -104,13 +106,21 @@ exports.list = function (req, res) {
     } = req.query
     page = page || 1
     let pages;
-    KeyModel.find({}, function (error, keys) {
+    KeyModel.find({
+      isCrawled: {
+        $ne: 3
+      }
+    }, function (error, keys) {
       if (error) {
         console.error(error);
         res.redirect('back')
       } else {
         pages = keys.length % 30 === 0 ? keys.length / 30 : parseInt(keys.length / 30 + 1);
-        KeyModel.find({}, {}, {
+        KeyModel.find({
+          isCrawled: {
+            $ne: 3
+          }
+        }, {}, {
           sort: {
             createdAt: -1
           },
@@ -190,30 +200,17 @@ exports.remove = function (req, res) {
     id
   } = req.query
   KeyModel
-    .remove({
+    .update({
       _id: id
+    }, {
+      $set: {
+        isCrawled: 3
+      }
     }, function (error) {
       if (error) {
         console.error('remove key error.');
       }
-      client.deleteByQuery({
-        index: 'baidunews_news',
-        type: 'baidunews_news',
-        body: {
-          query: {
-            term: {
-              keyId: id
-            }
-          }
-        }
-      }, function (error, response) {
-        if (error) {
-          console.error(error.message);
-        } else {
-          console.log(response);
-        }
-        res.send();
-      });
+      res.send();
     })
 }
 
@@ -232,7 +229,10 @@ exports.search = (req, res) => {
       title: reg
     }, {
       key: reg
-    }]
+    }],
+    isCrawled: {
+      $ne: 3
+    }
   }).sort({
     publishedAt: 1
   }).skip(30 * (page - 1)).limit(30).exec();

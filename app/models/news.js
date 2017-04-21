@@ -19,6 +19,6 @@ const NewsSchema = new Schema({
 })
 
 //测试
-const NewsModel = mongoose.model('baidunews_news', NewsSchema);
+// const NewsModel = mongoose.model('baidunews_news', NewsSchema);
 
-module.exports = NewsModel
+// module.exports = NewsModel
