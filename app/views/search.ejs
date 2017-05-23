@@ -41,6 +41,11 @@
             <span class="list-group-item-text"><%- keys[i].key.replace(new RegExp(keyword, 'igm'), str => `<strong class="highlight">${str}</strong>`) %></span>
           </li>
           <div class="split"></div>
+          <li class="list-group-item list-group-item-warning">
+            <strong class="list-group-item-heading">关键词 id：</strong>
+            <span class="list-group-item-text"><%= keys[i]._id %></span>
+          </li>
+          <div class="split"></div>
           <li class="list-group-item list-group-item-info">
             <strong class="list-group-item-heading">查询关键词位置：</strong>
             <span class="list-group-item-text"><%= keys[i].tn === 'newsdy' ? '全文' : '标题' %></span>
@@ -69,6 +74,11 @@
           <li class="list-group-item list-group-item-warning">
             <strong class="list-group-item-heading">添加时间：</strong>
             <span class="list-group-item-text"><%= moment(keys[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-info">
+            <strong class="list-group-item-heading">更新日期：</strong>
+            <span class="list-group-item-text"><%= moment(keys[i].updatedAt - 1000 * 60 * 60 * 24).format('YYYY-MM-DD') %></span>
           </li>
         </ul>
       </div>

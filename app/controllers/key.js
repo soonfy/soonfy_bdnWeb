@@ -223,6 +223,9 @@ exports.search = (req, res) => {
     page
   } = req.query,
     pages;
+  if (!keyword.trim()) {
+    return res.redirect('/key');
+  }
   let reg = new RegExp(keyword, 'igm');
   let promise = KeyModel.find({
     $or: [{
