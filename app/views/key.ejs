@@ -78,7 +78,7 @@
           <div class="split"></div>
           <li class="list-group-item list-group-item-warning">
             <strong class="list-group-item-heading">更新日期：</strong>
-            <span class="list-group-item-text"><%= moment(keys[i].updatedAt).format('YYYY-MM-DD') %></span>
+            <span class="list-group-item-text"><%= moment(keys[i].updatedAt - 1000 * 60 * 60 * 24).format('YYYY-MM-DD') %></span>
           </li>
         </ul>
       </div>
