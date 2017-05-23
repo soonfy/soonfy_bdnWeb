@@ -71,9 +71,14 @@
             <span class="list-group-item-text"><%= keys[i].q6 %></span>
           </li>-->
           <div class="split"></div>
-          <li class="list-group-item list-group-item-warning">
+          <li class="list-group-item list-group-item-info">
             <strong class="list-group-item-heading">添加时间：</strong>
             <span class="list-group-item-text"><%= moment(keys[i].createdAt).format('YYYY-MM-DD HH:mm:ss') %></span>
+          </li>
+          <div class="split"></div>
+          <li class="list-group-item list-group-item-warning">
+            <strong class="list-group-item-heading">更新日期：</strong>
+            <span class="list-group-item-text"><%= moment(keys[i].updatedAt).format('YYYY-MM-DD') %></span>
           </li>
         </ul>
       </div>
