@@ -163,7 +163,8 @@ exports.info = function (req, res) {
     type: 'baidunews_news',
     from: (page - 1) * perPage,
     size: perPage,
-    q: `keyId:${id}`
+    q: `keyId:${id}`,
+    sort: 'createdAt:desc'
   };
   if (id) {
     KeyModel.findOne({
