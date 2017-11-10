@@ -10,6 +10,7 @@ var debug = require('debug')('bdn_website:server');
 var mongoose = require('mongoose') //connect mongodb
 
 var routes = require('./routes/index');
+var apis = require('./routes/api');
 
 var app = express();
 
@@ -35,11 +36,12 @@ if (process.argv.length < 4) {
   process.exit();
 }
 let dburl = process.argv[2] || '';
-// let dburl = 'mongodb://localhost/baidu';
+dburl = 'mongodb://localhost/baidu';
 console.log('mongodb url', dburl);
 mongoose.connect(dburl)
 
 app.use('/', routes);
+app.use('/api/', apis);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
