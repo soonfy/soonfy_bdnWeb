@@ -15,6 +15,20 @@ const client = new elasticsearch.Client({
   ]
 });
 
+router.get('/methods', async function (req, res) {
+  res.send({
+    title: '这是百度新闻 api 接口。',
+    methods: {
+      '/news/add': 'keyword + from_id + start_date + end_date',
+      '/news/delete': 'keyword + from_id',
+      '/news/get': 'keyword + from_id + start_date + end_date',
+      '/news/status': 'keyword + from_id + start_date + end_date',
+      '/news/content': 'keyword + from_id + start_date + end_date',
+    },
+    stamp: Date.now(),
+  });
+});
+
 router.get('/', async function (req, res) {
   // res.send({
   //   msg: '这是百度新闻 api 接口。',
