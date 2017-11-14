@@ -75,7 +75,7 @@ exports.insert = function (req, res) {
           start: date,
           updatedAt: date
         }
-        KeyModel.findOneAndUpdate({ key, key }, { $set: _key }, { upsert: true }, function(err, resp){
+        KeyModel.findOneAndUpdate({ key, key }, { $set: _key }, { upsert: true }, function (err, resp) {
           if (error) {
             res.locals.msg.err = `需求 ${title} 添加失败。`
             console.error(`save key error.`);
@@ -121,24 +121,24 @@ exports.list = function (req, res) {
             $ne: 3
           }
         }, {}, {
-          sort: {
-            createdAt: -1
-          },
-          skip: 30 * (page - 1),
-          limit: 30
-        }, function (error, keys) {
-          if (error) {
-            console.error(error);
-            res.redirect('back')
-          } else {
-            res.render('key', {
-              title: '关键词',
-              keys: keys,
-              pages: pages,
-              page: page
-            })
-          }
-        })
+            sort: {
+              createdAt: -1
+            },
+            skip: 30 * (page - 1),
+            limit: 30
+          }, function (error, keys) {
+            if (error) {
+              console.error(error);
+              res.redirect('back')
+            } else {
+              res.render('key', {
+                title: '关键词',
+                keys: keys,
+                pages: pages,
+                page: page
+              })
+            }
+          })
       }
     })
   })

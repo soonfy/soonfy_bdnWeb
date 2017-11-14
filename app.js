@@ -74,7 +74,7 @@ app.use(function (err, req, res, next) {
   });
 });
 
-app.set('port', 3040);
+app.set('port', 3039);
 console.log('server is running at port 3040.');
 
 var server = app.listen(app.get('port'), function () {
