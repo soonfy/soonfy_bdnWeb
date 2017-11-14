@@ -36,7 +36,7 @@ if (process.argv.length < 4) {
   process.exit();
 }
 let dburl = process.argv[2] || '';
-dburl = 'mongodb://localhost/baidu';
+// dburl = 'mongodb://localhost/baidu';
 console.log('mongodb url', dburl);
 mongoose.connect(dburl)
 
