@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'readme.md')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
 console.log(process.argv);

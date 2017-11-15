@@ -4,9 +4,9 @@ const rp = require('request-promise');
 //   try {
 //     let options = {
 //       method: 'POST',
-//       uri: 'http://localhost:3040/api/news/add',
+//       uri: 'http://101.201.30.76:3039/api/news/add',
 //       body: {
-//         keyword: '猎场',
+//         keyword: '猎场+胡歌||猎场+万茜',
 //         from_id: 'soonfy-1113-21',
 //         start_date: '2017-11-01',
 //         end_date: '2017-11-01',
@@ -24,9 +24,9 @@ const rp = require('request-promise');
 //   try {
 //     let options = {
 //       method: 'POST',
-//       uri: 'http://localhost:3040/api/news/delete',
+//       uri: 'http://101.201.30.76:3039/api/news/delete',
 //       body: {
-//         keyword: '猎场',
+//         keyword: '猎场+胡歌||猎场+万茜',
 //         from_id: 'soonfy-1113-21',
 //       },
 //       json: true
@@ -42,10 +42,30 @@ const rp = require('request-promise');
 //   try {
 //     let options = {
 //       method: 'POST',
-//       uri: 'http://localhost:3040/api/news/status',
+//       uri: 'http://101.201.30.76:3039/api/news/get',
 //       body: {
-//         keyword: '猎场',
-//         from_id: 'soonfy-1113',
+//         keyword: '猎场+胡歌||猎场+万茜',
+//         from_id: 'soonfy-1113-21',
+//         start_date: '2017-11-01',
+//         end_date: '2017-11-01',
+//       },
+//       json: true
+//     };
+//     let data = await rp(options)
+//     console.log(data);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+
+// const start = async () => {
+//   try {
+//     let options = {
+//       method: 'POST',
+//       uri: 'http://101.201.30.76:3039/api/news/status',
+//       body: {
+//         keyword: '猎场+胡歌||猎场+万茜',
+//         from_id: 'soonfy-1113-21',
 //         start_date: '2017-11-01',
 //         end_date: '2017-11-01',
 //       },
@@ -62,10 +82,10 @@ const start = async () => {
   try {
     let options = {
       method: 'POST',
-      uri: 'http://localhost:3040/api/news/content',
+      uri: 'http://101.201.30.76:3039/api/news/content',
       body: {
-        keyword: '猎场',
-        from_id: 'soonfy-1113-2',
+        keyword: '猎场+胡歌||猎场+万茜',
+        from_id: 'soonfy-1113-21',
         start_date: '2017-11-01',
         end_date: '2017-11-01',
       },

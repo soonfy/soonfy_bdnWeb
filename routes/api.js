@@ -19,11 +19,23 @@ router.get('/methods', async function (req, res) {
   res.send({
     title: '这是百度新闻 api 接口。',
     methods: {
-      '/news/add': 'keyword + from_id + start_date + end_date',
-      '/news/delete': 'keyword + from_id',
-      '/news/get': 'keyword + from_id + start_date + end_date',
-      '/news/status': 'keyword + from_id + start_date + end_date',
-      '/news/content': 'keyword + from_id + start_date + end_date',
+      '/news/add': {
+        post: 'keyword + from_id + start_date + end_date',
+        response: '',
+        error: ''
+      },
+      '/news/delete': {
+        post: 'keyword + from_id',
+      },
+      '/news/get': {
+        post: 'keyword + from_id + start_date + end_date',
+      },
+      '/news/status': {
+        post: 'keyword + from_id + start_date + end_date',
+      },
+      '/news/content': {
+        post: 'keyword + from_id + start_date + end_date',
+      }
     },
     stamp: Date.now(),
   });
@@ -75,22 +87,22 @@ router.post('/news/add', async function (req, res) {
           statusCode: 200,
           keyword_id: _keyword._id,
           keyword,
-          msg: '[百度新闻] 添加关键词成功',
+          msg: '[百度新闻] 添加关键词add成功',
         });
       } else {
         resp = Object.assign(resp, {
           statusCode: 400,
           keyword,
-          msg: '[百度新闻] 添加关键词失败',
-          error: '日期区间不合法',
+          msg: '[百度新闻] 添加关键词add失败',
+          error: 'add 日期区间不合法',
         });
       }
     } else {
       resp = Object.assign(resp, {
         statusCode: 400,
         keyword,
-        msg: '[百度新闻] 添加关键词失败',
-        error: 'POST 请求参数不完整',
+        msg: '[百度新闻] 添加关键词add失败',
+        error: 'add 请求参数不完整',
       });
     }
   } catch (error) {
@@ -98,7 +110,7 @@ router.post('/news/add', async function (req, res) {
     resp = Object.assign(resp, {
       statusCode: 400,
       keyword,
-      msg: '[百度新闻] 添加关键词失败',
+      msg: '[百度新闻] 添加关键词add失败',
       error: '服务器异常',
     });
   } finally {
@@ -128,16 +140,16 @@ router.post('/news/delete', async function (req, res) {
       let _keyword = await KeyWordModel.findOneAndUpdate({ keyword: keyword, from_id: from_id, crawl_status: { $gte: 0 } }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { new: true });
       resp = Object.assign(resp, {
         statusCode: 200,
-        keyword_id: _keyword ? _keyword._id : '关键词不存在',
+        keyword_id: _keyword ? _keyword._id : 'delete关键词不存在',
         keyword,
-        msg: '[百度新闻] 删除关键词成功',
+        msg: '[百度新闻] 删除关键词delete成功',
       });
     } else {
       resp = Object.assign(resp, {
         statusCode: 400,
         keyword,
-        msg: '[百度新闻] 删除关键词失败',
-        error: 'DELETE 请求参数不完整',
+        msg: '[百度新闻] 删除关键词delete失败',
+        error: 'delete 请求参数不完整',
       });
     }
   } catch (error) {
@@ -145,7 +157,7 @@ router.post('/news/delete', async function (req, res) {
     resp = Object.assign(resp, {
       statusCode: 400,
       keyword,
-      msg: '[百度新闻] 删除关键词失败',
+      msg: '[百度新闻] 删除关键词delete失败',
       error: '服务器异常',
     });
   } finally {
@@ -185,22 +197,22 @@ router.post('/news/get', async function (req, res) {
           keyword_id: _keyword._id,
           keyword,
           news: counts,
-          msg: '[百度新闻] 查询关键词成功',
+          msg: '[百度新闻] 查询关键词提及量get成功',
         });
       } else {
         resp = Object.assign(resp, {
           statusCode: 400,
           keyword,
-          msg: '[百度新闻] 查询关键词失败',
-          error: 'GET 请求没有匹配到关键词',
+          msg: '[百度新闻] 查询关键词提及量get失败',
+          error: 'get 请求没有匹配到关键词',
         });
       }
     } else {
       resp = Object.assign(resp, {
         statusCode: 400,
         keyword,
-        msg: '[百度新闻] 查询关键词失败',
-        error: 'GET 请求参数不完整',
+        msg: '[百度新闻] 查询关键词提及量get失败',
+        error: 'get 请求参数不完整',
       });
     }
   } catch (error) {
@@ -208,7 +220,7 @@ router.post('/news/get', async function (req, res) {
     resp = Object.assign(resp, {
       statusCode: 400,
       keyword,
-      msg: '[百度新闻] 查询关键词失败',
+      msg: '[百度新闻] 查询关键词提及量get失败',
       error: '服务器异常',
     });
   } finally {
@@ -249,7 +261,7 @@ router.post('/news/status', async function (req, res) {
               keyword_id: _keyword._id,
               keyword,
               status: '数据完整',
-              msg: '[百度新闻] 查询关键词状态成功',
+              msg: '[百度新闻] 查询关键词状态status成功',
             });
           } else if (!_keyword.end_date || _keyword.end_date >= end) {
             resp = Object.assign(resp, {
@@ -257,7 +269,7 @@ router.post('/news/status', async function (req, res) {
               keyword_id: _keyword._id,
               keyword,
               status: '数据不完整',
-              msg: '[百度新闻] 查询关键词状态失败',
+              msg: '[百度新闻] 查询关键词状态status失败',
               error: '数据更新到' + moment(_keyword.last_crawl_at).format('YYYY-MM-DD'),
             });
           } else {
@@ -266,7 +278,7 @@ router.post('/news/status', async function (req, res) {
               keyword_id: _keyword._id,
               keyword,
               status: '数据不完整',
-              msg: '[百度新闻] 查询关键词状态失败',
+              msg: '[百度新闻] 查询关键词状态status失败',
               error: '查询结束时间(' + end_date + ')大于结束监测时间(' + moment(_keyword.end_date).format('YYYY-MM-DD') + ')',
             });
           }
@@ -276,7 +288,7 @@ router.post('/news/status', async function (req, res) {
             keyword_id: _keyword._id,
             keyword,
             status: '数据不完整',
-            msg: '[百度新闻] 查询关键词状态失败',
+            msg: '[百度新闻] 查询关键词状态status失败',
             error: '查询开始时间(' + start_date + ')小于开始监测时间(' + moment(_keyword.start_date).format('YYYY-MM-DD') + ')',
           });
         }
@@ -284,16 +296,16 @@ router.post('/news/status', async function (req, res) {
         resp = Object.assign(resp, {
           statusCode: 400,
           keyword,
-          msg: '[百度新闻] 查询关键词状态失败',
-          error: 'STATUS 请求没有匹配到关键词',
+          msg: '[百度新闻] 查询关键词状态status失败',
+          error: 'status 请求没有匹配到关键词',
         });
       }
     } else {
       resp = Object.assign(resp, {
         statusCode: 400,
         keyword,
-        msg: '[百度新闻] 查询关键词状态失败',
-        error: 'GET 请求参数不完整',
+        msg: '[百度新闻] 查询关键词状态status失败',
+        error: 'status 请求参数不完整',
       });
     }
   } catch (error) {
@@ -301,7 +313,7 @@ router.post('/news/status', async function (req, res) {
     resp = Object.assign(resp, {
       statusCode: 400,
       keyword,
-      msg: '[百度新闻] 查询关键词状态失败',
+      msg: '[百度新闻] 查询关键词状态status失败',
       error: '服务器异常',
     });
   } finally {
@@ -383,22 +395,22 @@ router.post('/news/content', async function (req, res) {
               url: x._source.url,
             }
           }),
-          msg: '[百度新闻] 查询关键词content成功',
+          msg: '[百度新闻] 查询关键词原文content成功',
         });
       } else {
         resp = Object.assign(resp, {
           statusCode: 400,
           keyword,
-          msg: '[百度新闻] 查询关键词状态失败',
-          error: 'STATUS 请求没有匹配到关键词',
+          msg: '[百度新闻] 查询关键词原文content失败',
+          error: 'content 请求没有匹配到关键词',
         });
       }
     } else {
       resp = Object.assign(resp, {
         statusCode: 400,
         keyword,
-        msg: '[百度新闻] 查询关键词状态失败',
-        error: 'GET 请求参数不完整',
+        msg: '[百度新闻] 查询关键词原文content失败',
+        error: 'content 请求参数不完整',
       });
     }
   } catch (error) {
@@ -406,7 +418,7 @@ router.post('/news/content', async function (req, res) {
     resp = Object.assign(resp, {
       statusCode: 400,
       keyword,
-      msg: '[百度新闻] 查询关键词状态失败',
+      msg: '[百度新闻] 查询关键词原文content失败',
       error: '服务器异常',
     });
   } finally {
