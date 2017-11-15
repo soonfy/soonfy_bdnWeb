@@ -37,6 +37,7 @@ router.get('/methods', async function (req, res) {
         post: 'keyword + from_id + start_date + end_date',
       }
     },
+    uri: 'https://github.com/soonfy/soonfy_bdnWeb/blob/webservice/readme.md',
     stamp: Date.now(),
   });
 });
