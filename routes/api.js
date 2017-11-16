@@ -15,6 +15,32 @@ const client = new elasticsearch.Client({
   ]
 });
 
+const ensure_dates = (start, end) => {
+  let dates = [], temp = moment(start).clone();
+  while (temp <= moment(end)) {
+    dates.push({
+      date: moment(moment(temp).format('YYYY-MM-DD')),
+      count: 0,
+    });
+    temp = temp.add(1, 'days');
+  }
+  // console.log(dates);
+  return dates;
+}
+
+const ensure_data = (start, end, data) => {
+  let dates = ensure_dates(start, end), result = [];
+  result = dates.map(x => {
+    data.map(_data => {
+      if (moment(_data.date).format('YYYY-MM-DD') === moment(x.date).format('YYYY-MM-DD')) {
+        x = _data;
+      }
+    })
+    return x;
+  })
+  return result;
+}
+
 router.get('/methods', async function (req, res) {
   res.send({
     title: '这是百度新闻 api 接口。',
@@ -185,7 +211,7 @@ router.post('/news/get', async function (req, res) {
     start_date,
     end_date,
   } = req.body;
-  console.log(from_id, keyword);
+  console.log(from_id, keyword, start_date, end_date);
   try {
     if (from_id && keyword && start_date && end_date) {
       let start = moment(start_date).startOf('day'),
@@ -193,6 +219,7 @@ router.post('/news/get', async function (req, res) {
       let _keyword = await KeyWordModel.findOne({ keyword: keyword, from_id: from_id, crawl_status: { $gte: 0 } });
       if (_keyword) {
         let counts = await CountModel.find({ key_id: _keyword._id, date: { $gte: start, $lte: end } }, { key_id: 1, date: 1, count: 1, create_at: 1 }, { sort: { date: 1 } });
+        counts = ensure_data(start_date, end_date, counts)
         resp = Object.assign(resp, {
           statusCode: 200,
           keyword_id: _keyword._id,
@@ -248,7 +275,7 @@ router.post('/news/status', async function (req, res) {
     start_date,
     end_date,
   } = req.body;
-  console.log(from_id, keyword);
+  console.log(from_id, keyword, start_date, end_date);
   try {
     if (from_id && keyword && start_date && end_date) {
       let start = moment(start_date).startOf('day'),
@@ -392,8 +419,9 @@ router.post('/news/content', async function (req, res) {
               author: x._source.author,
               title: x._source.title,
               summary: x._source.summary,
-              date: moment(x._source.publishedAt).format('YYYY-MM-DD'),
+              date: x._source.publishedAt,
               url: x._source.url,
+              crawl_at: x._source.createdAt,
             }
           }),
           msg: '[百度新闻] 查询关键词原文content成功',
