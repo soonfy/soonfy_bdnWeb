@@ -107,10 +107,10 @@ router.post('/news/add', async function (req, res) {
         create_at: new Date(),
       })
       if (!doc.end_date || doc.end_date >= doc.start_date) {
-        let _keyword = await KeyWordModel.findOneAndUpdate({ from_id: from_id, keyword: keyword }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { new: true });
+        let _keyword = await KeyWordModel.findOneAndUpdate({ from_id: from_id, keyword: keyword }, { $set: doc }, { new: true });
         if (!_keyword) {
           await KeyWordModel.update({ from_id: from_id }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { multi: true });
-          _keyword = await KeyWordModel.findOneAndUpdate({ from_id: from_id, keyword: keyword }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { new: true, upsert: true });
+          _keyword = await KeyWordModel.findOneAndUpdate({ from_id: from_id, keyword: keyword }, { $set: doc }, { new: true, upsert: true });
         }
         resp = Object.assign(resp, {
           statusCode: 200,
