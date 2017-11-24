@@ -387,7 +387,7 @@ router.post('/news/content', async function (req, res) {
                 "must": [
                   {
                     "term": {
-                      "keyId": _keyword.keyword
+                      "keyword": _keyword.keyword
                     }
                   },
                   {
