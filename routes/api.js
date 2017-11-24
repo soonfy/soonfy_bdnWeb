@@ -107,9 +107,11 @@ router.post('/news/add', async function (req, res) {
         create_at: new Date(),
       })
       if (!doc.end_date || doc.end_date >= doc.start_date) {
-        await KeyWordModel.findOneAndUpdate({ crawl_status: 0, from_id: from_id }, { $set: { crawl_status: -1, crawling_at: new Date() } });
-        // let _keyword = await KeyWordModel.findOneAndUpdate({ crawl_status: 0, from_id: doc.from_id }, { $set: doc }, { upsert: true, new: true });
-        let _keyword = await KeyWordModel.create(doc);
+        let _keyword = await KeyWordModel.findOneAndUpdate({ from_id: from_id, keyword: keyword }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { new: true });
+        if (!_keyword) {
+          await KeyWordModel.update({ from_id: from_id }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { multi: true });
+          _keyword = await KeyWordModel.findOneAndUpdate({ from_id: from_id, keyword: keyword }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { new: true, upsert: true });
+        }
         resp = Object.assign(resp, {
           statusCode: 200,
           keyword_id: _keyword._id,
@@ -164,7 +166,7 @@ router.post('/news/delete', async function (req, res) {
   console.log(from_id, keyword);
   try {
     if (from_id && keyword) {
-      let _keyword = await KeyWordModel.findOneAndUpdate({ keyword: keyword, from_id: from_id, crawl_status: { $gte: 0 } }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { new: true });
+      let _keyword = await KeyWordModel.findOneAndUpdate({ from_id: from_id, keyword: keyword }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { new: true });
       resp = Object.assign(resp, {
         statusCode: 200,
         keyword_id: _keyword ? _keyword._id : 'delete关键词不存在',
@@ -216,9 +218,9 @@ router.post('/news/get', async function (req, res) {
     if (from_id && keyword && start_date && end_date) {
       let start = moment(start_date).startOf('day'),
         end = moment(end_date).endOf('day');
-      let _keyword = await KeyWordModel.findOne({ keyword: keyword, from_id: from_id, crawl_status: { $gte: 0 } });
+      let _keyword = await KeyWordModel.findOne({ from_id: from_id, keyword: keyword });
       if (_keyword) {
-        let counts = await CountModel.find({ key_id: _keyword._id, date: { $gte: start, $lte: end } }, { key_id: 1, date: 1, count: 1, create_at: 1 }, { sort: { date: 1 } });
+        let counts = await CountModel.find({ keyword: _keyword.keyword, date: { $gte: start, $lte: end } }, { keyword: 1, date: 1, count: 1, create_at: 1 }, { sort: { date: 1 } });
         counts = ensure_data(start_date, end_date, counts)
         resp = Object.assign(resp, {
           statusCode: 200,
@@ -280,7 +282,7 @@ router.post('/news/status', async function (req, res) {
     if (from_id && keyword && start_date && end_date) {
       let start = moment(start_date).startOf('day'),
         end = moment(end_date).endOf('day');
-      let _keyword = await KeyWordModel.findOne({ keyword: keyword, from_id: from_id, crawl_status: { $gte: 0 } });
+      let _keyword = await KeyWordModel.findOne({ keyword: keyword, from_id: from_id });
       if (_keyword) {
         if (_keyword.start_date <= start) {
           if (_keyword.last_crawl_at >= end) {
@@ -374,7 +376,7 @@ router.post('/news/content', async function (req, res) {
     if (from_id && keyword && start_date && end_date) {
       let start = moment(start_date).startOf('day'),
         end = moment(end_date).endOf('day');
-      let _keyword = await KeyWordModel.findOne({ keyword: keyword, from_id: from_id, crawl_status: { $gte: 0 } });
+      let _keyword = await KeyWordModel.findOne({ from_id: from_id, keyword: keyword });
       if (_keyword) {
         let searchParams = {
           index: 'baidunews_news',
@@ -385,7 +387,7 @@ router.post('/news/content', async function (req, res) {
                 "must": [
                   {
                     "term": {
-                      "keyId": _keyword._id
+                      "keyId": _keyword.keyword
                     }
                   },
                   {
