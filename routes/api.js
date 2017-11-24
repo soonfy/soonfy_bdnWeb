@@ -166,7 +166,7 @@ router.post('/news/delete', async function (req, res) {
   console.log(from_id, keyword);
   try {
     if (from_id && keyword) {
-      let _keyword = await KeyWordModel.update({ from_id: from_id, crawl_status: { $ne: -1 } }, { $set: { crawl_status: -1, crawling_at: new Date() } }, { new: true });
+      let _keyword = await KeyWordModel.update({ from_id: from_id, crawl_status: { $ne: -1 } }, { $set: { keyword: '', crawl_status: -1, crawling_at: new Date() } }, { new: true });
       resp = Object.assign(resp, {
         statusCode: 200,
         keyword_id: _keyword ? _keyword._id : 'delete关键词不存在',
