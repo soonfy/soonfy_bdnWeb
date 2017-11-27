@@ -525,8 +525,8 @@ router.post('/news/page', async function (req, res) {
           keyword,
           total: result.hits.total,
           totalPage: Math.ceil(result.hits.total / pageSize),
-          page: pageNumber,
-          size: pageSize,
+          page: pageNumber - 0,
+          size: pageSize - 0,
           news: result.hits.hits.map(x => {
             return {
               id: x._id,
