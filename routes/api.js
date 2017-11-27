@@ -457,4 +457,116 @@ router.post('/news/content', async function (req, res) {
   }
 });
 
+router.post('/news/page', async function (req, res) {
+  let resp = {
+    statusCode: 000,
+    keyword_id: '',
+    keyword: '',
+    total: 0,
+    totalPage: 0,
+    page: 0,
+    size: 0,
+    news: [],
+    msg: '',
+    error: '',
+    stamp: Date.now(),
+  };
+  let {
+    keyword,
+    from_id,
+    start_date,
+    end_date,
+    pageNumber = 1,
+    pageSize = 10,
+  } = req.body;
+  console.log(from_id, keyword, start_date, end_date, pageNumber, pageSize);
+  try {
+    if (from_id && keyword && start_date && end_date) {
+      let start = moment(start_date).startOf('day'),
+        end = moment(end_date).endOf('day');
+      let _keyword = await KeyWordModel.findOne({ from_id: from_id, keyword: keyword });
+      if (_keyword) {
+        let searchParams = {
+          index: 'baidunews_news',
+          type: 'baidunews_news',
+          body: {
+            query: {
+              bool: {
+                "must": [
+                  {
+                    "term": {
+                      "keyword": _keyword.keyword
+                    }
+                  },
+                  {
+                    "range": {
+                      "publishedAt": {
+                        "gte": moment(start_date).startOf('day'),
+                        "lte": moment(end_date).endOf('day')
+                      }
+                    }
+                  },
+                ],
+              }
+            },
+            "sort": {
+              "publishedAt": {
+                "order": "desc"
+              }
+            },
+            "from": pageSize * (pageNumber - 1),
+            "size": pageSize,
+          },
+        }
+        let result = await client.search(searchParams);
+        resp = Object.assign(resp, {
+          statusCode: 200,
+          keyword_id: _keyword._id,
+          keyword,
+          total: result.hits.total,
+          totalPage: Math.ceil(result.hits.total / pageSize),
+          page: pageNumber,
+          size: pageSize,
+          news: result.hits.hits.map(x => {
+            return {
+              id: x._id,
+              author: x._source.author,
+              title: x._source.title,
+              summary: x._source.summary,
+              date: x._source.publishedAt,
+              url: x._source.url,
+              crawl_at: x._source.createdAt,
+            }
+          }),
+          msg: '[百度新闻] 查询关键词原文content成功',
+        });
+      } else {
+        resp = Object.assign(resp, {
+          statusCode: 400,
+          keyword,
+          msg: '[百度新闻] 查询关键词原文content失败',
+          error: 'content 请求没有匹配到关键词',
+        });
+      }
+    } else {
+      resp = Object.assign(resp, {
+        statusCode: 400,
+        keyword,
+        msg: '[百度新闻] 查询关键词原文content失败',
+        error: 'content 请求参数不完整',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    resp = Object.assign(resp, {
+      statusCode: 400,
+      keyword,
+      msg: '[百度新闻] 查询关键词原文content失败',
+      error: '服务器异常',
+    });
+  } finally {
+    res.send(resp);
+  }
+});
+
 module.exports = router;
