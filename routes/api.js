@@ -41,39 +41,12 @@ const ensure_data = (start, end, data) => {
   return result;
 }
 
-router.get('/methods', async function (req, res) {
+router.get('/', async function (req, res) {
   res.send({
-    title: '这是百度新闻 api 接口。',
-    methods: {
-      '/news/add': {
-        post: 'keyword + from_id + start_date + end_date',
-        response: '',
-        error: ''
-      },
-      '/news/delete': {
-        post: 'keyword + from_id',
-      },
-      '/news/get': {
-        post: 'keyword + from_id + start_date + end_date',
-      },
-      '/news/status': {
-        post: 'keyword + from_id + start_date + end_date',
-      },
-      '/news/content': {
-        post: 'keyword + from_id + start_date + end_date',
-      }
-    },
-    uri: 'https://github.com/soonfy/soonfy_bdnWeb/blob/webservice/readme.md',
+    msg: '这是百度新闻 api 接口。',
+    demo: await KeyWordModel.findOne(),
     stamp: Date.now(),
   });
-});
-
-router.get('/', async function (req, res) {
-  // res.send({
-  //   msg: '这是百度新闻 api 接口。',
-  //   stamp: Date.now(),
-  // });
-  res.send(await KeyWordModel.find());
 });
 
 /**
@@ -114,7 +87,7 @@ router.post('/news/add', async function (req, res) {
         }
         resp = Object.assign(resp, {
           statusCode: 200,
-          keyword_id: _keyword._id,
+          keyword_id: from_id,
           keyword,
           msg: '[百度新闻] 添加关键词add成功',
         });
@@ -169,7 +142,7 @@ router.post('/news/delete', async function (req, res) {
       let _keyword = await KeyWordModel.update({ from_id: from_id, crawl_status: { $ne: -1 } }, { $set: { keyword: '', crawl_status: -1, crawling_at: new Date() } }, { new: true });
       resp = Object.assign(resp, {
         statusCode: 200,
-        keyword_id: _keyword ? _keyword._id : 'delete关键词不存在',
+        keyword_id: _keyword ? from_id : 'delete关键词不存在',
         keyword,
         msg: '[百度新闻] 删除关键词delete成功',
       });
@@ -224,7 +197,72 @@ router.post('/news/get', async function (req, res) {
         counts = ensure_data(start_date, end_date, counts)
         resp = Object.assign(resp, {
           statusCode: 200,
-          keyword_id: _keyword._id,
+          keyword_id: from_id,
+          keyword,
+          news: counts,
+          msg: '[百度新闻] 查询关键词提及量get成功',
+        });
+      } else {
+        resp = Object.assign(resp, {
+          statusCode: 400,
+          keyword,
+          msg: '[百度新闻] 查询关键词提及量get失败',
+          error: 'get 请求没有匹配到关键词',
+        });
+      }
+    } else {
+      resp = Object.assign(resp, {
+        statusCode: 400,
+        keyword,
+        msg: '[百度新闻] 查询关键词提及量get失败',
+        error: 'get 请求参数不完整',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    resp = Object.assign(resp, {
+      statusCode: 400,
+      keyword,
+      msg: '[百度新闻] 查询关键词提及量get失败',
+      error: '服务器异常',
+    });
+  } finally {
+    res.send(resp);
+  }
+});
+
+/**
+ * 根据关键词增量查询count
+ */
+router.post('/news/update', async function (req, res) {
+  let resp = {
+    statusCode: 000,
+    keyword_id: '',
+    keyword: '',
+    news: [],
+    msg: '',
+    error: '',
+    stamp: Date.now(),
+  };
+  let {
+    keyword,
+    from_id,
+    start_date,
+    end_date,
+    update_at
+  } = req.body;
+  console.log(from_id, keyword, start_date, end_date, update_at);
+  try {
+    if (from_id && keyword && start_date && end_date && update_at) {
+      let start = moment(start_date).startOf('day'),
+        end = moment(end_date).endOf('day');
+      let _keyword = await KeyWordModel.findOne({ from_id: from_id, keyword: keyword });
+      if (_keyword) {
+        let counts = await CountModel.find({ keyword: _keyword.keyword, date: { $gte: start, $lte: end } }, { keyword: 1, date: 1, count: 1, create_at: 1 }, { sort: { date: 1 } });
+        // counts = ensure_data(start_date, end_date, counts)
+        resp = Object.assign(resp, {
+          statusCode: 200,
+          keyword_id: from_id,
           keyword,
           news: counts,
           msg: '[百度新闻] 查询关键词提及量get成功',
@@ -288,7 +326,7 @@ router.post('/news/status', async function (req, res) {
           if (_keyword.last_crawl_at >= end) {
             resp = Object.assign(resp, {
               statusCode: 200,
-              keyword_id: _keyword._id,
+              keyword_id: from_id,
               keyword,
               status: '数据完整',
               msg: '[百度新闻] 查询关键词状态status成功',
@@ -296,7 +334,7 @@ router.post('/news/status', async function (req, res) {
           } else if (!_keyword.end_date || _keyword.end_date >= end) {
             resp = Object.assign(resp, {
               statusCode: 400,
-              keyword_id: _keyword._id,
+              keyword_id: from_id,
               keyword,
               status: '数据不完整',
               msg: '[百度新闻] 查询关键词状态status失败',
@@ -305,7 +343,7 @@ router.post('/news/status', async function (req, res) {
           } else {
             resp = Object.assign(resp, {
               statusCode: 400,
-              keyword_id: _keyword._id,
+              keyword_id: from_id,
               keyword,
               status: '数据不完整',
               msg: '[百度新闻] 查询关键词状态status失败',
@@ -315,7 +353,7 @@ router.post('/news/status', async function (req, res) {
         } else {
           resp = Object.assign(resp, {
             statusCode: 400,
-            keyword_id: _keyword._id,
+            keyword_id: from_id,
             keyword,
             status: '数据不完整',
             msg: '[百度新闻] 查询关键词状态status失败',
@@ -412,7 +450,7 @@ router.post('/news/content', async function (req, res) {
         let result = await client.search(searchParams);
         resp = Object.assign(resp, {
           statusCode: 200,
-          keyword_id: _keyword._id,
+          keyword_id: from_id,
           keyword,
           total: result.hits.total,
           news: result.hits.hits.map(x => {
@@ -521,7 +559,7 @@ router.post('/news/page', async function (req, res) {
         let result = await client.search(searchParams);
         resp = Object.assign(resp, {
           statusCode: 200,
-          keyword_id: _keyword._id,
+          keyword_id: from_id,
           keyword,
           total: result.hits.total,
           totalPage: Math.ceil(result.hits.total / pageSize),
