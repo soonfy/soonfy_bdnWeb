@@ -120,4 +120,25 @@ const rp = require('request-promise');
 //   }
 // }
 
+const start = async () => {
+  try {
+    let options = {
+      method: 'POST',
+      uri: 'http://101.201.30.76:3039/api/news/update',
+      body: {
+        keyword: '猎场',
+        from_id: '58560a44731f6c8f5a851bf2',
+        start_date: '2017-11-01',
+        end_date: '2017-11-27',
+        update_date: '2017-11-27',
+      },
+      json: true
+    };
+    let data = await rp(options)
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 start();

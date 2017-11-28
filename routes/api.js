@@ -249,16 +249,16 @@ router.post('/news/update', async function (req, res) {
     from_id,
     start_date,
     end_date,
-    update_at
+    update_date
   } = req.body;
-  console.log(from_id, keyword, start_date, end_date, update_at);
+  console.log(from_id, keyword, start_date, end_date, update_date);
   try {
-    if (from_id && keyword && start_date && end_date && update_at) {
+    if (from_id && keyword && start_date && end_date && update_date) {
       let start = moment(start_date).startOf('day'),
         end = moment(end_date).endOf('day');
       let _keyword = await KeyWordModel.findOne({ from_id: from_id, keyword: keyword });
       if (_keyword) {
-        let counts = await CountModel.find({ keyword: _keyword.keyword, date: { $gte: start, $lte: end } }, { keyword: 1, date: 1, count: 1, create_at: 1 }, { sort: { date: 1 } });
+        let counts = await CountModel.find({ keyword: _keyword.keyword, date: { $gte: start, $lte: end }, create_at: { $gte: moment(update_date).startOf('day') } }, { keyword: 1, date: 1, count: 1, create_at: 1 }, { sort: { date: 1 } });
         // counts = ensure_data(start_date, end_date, counts)
         resp = Object.assign(resp, {
           statusCode: 200,
