@@ -126,11 +126,11 @@ const start = async () => {
       method: 'POST',
       uri: 'http://101.201.30.76:3039/api/news/update',
       body: {
-        keyword: '猎场',
-        from_id: '58560a44731f6c8f5a851bf2',
-        start_date: '2017-11-01',
-        end_date: '2017-11-27',
-        update_date: '2017-11-27',
+        keyword: '创富英雄',
+        from_id: '57b14a00a78b9eb67a71066d',
+        start_date: '2017-01-01',
+        end_date: '',
+        update_date: '2017-01-01',
       },
       json: true
     };

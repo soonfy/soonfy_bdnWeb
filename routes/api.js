@@ -184,7 +184,7 @@ router.post('/news/get', async function (req, res) {
     keyword,
     from_id,
     start_date,
-    end_date,
+    end_date = moment().format('YYYY-MM-DD'),
   } = req.body;
   console.log(from_id, keyword, start_date, end_date);
   try {
@@ -248,7 +248,7 @@ router.post('/news/update', async function (req, res) {
     keyword,
     from_id,
     start_date,
-    end_date,
+    end_date = moment().format('YYYY-MM-DD'),
     update_date
   } = req.body;
   console.log(from_id, keyword, start_date, end_date, update_date);
@@ -265,22 +265,22 @@ router.post('/news/update', async function (req, res) {
           keyword_id: from_id,
           keyword,
           news: counts,
-          msg: '[百度新闻] 查询关键词提及量get成功',
+          msg: '[百度新闻] 查询关键词提及量 update 成功',
         });
       } else {
         resp = Object.assign(resp, {
           statusCode: 400,
           keyword,
-          msg: '[百度新闻] 查询关键词提及量get失败',
-          error: 'get 请求没有匹配到关键词',
+          msg: '[百度新闻] 查询关键词提及量 update 失败',
+          error: 'update 请求没有匹配到关键词',
         });
       }
     } else {
       resp = Object.assign(resp, {
         statusCode: 400,
         keyword,
-        msg: '[百度新闻] 查询关键词提及量get失败',
-        error: 'get 请求参数不完整',
+        msg: '[百度新闻] 查询关键词提及量 update 失败',
+        error: 'update 请求参数不完整',
       });
     }
   } catch (error) {
@@ -288,7 +288,7 @@ router.post('/news/update', async function (req, res) {
     resp = Object.assign(resp, {
       statusCode: 400,
       keyword,
-      msg: '[百度新闻] 查询关键词提及量get失败',
+      msg: '[百度新闻] 查询关键词提及量 update 失败',
       error: '服务器异常',
     });
   } finally {
