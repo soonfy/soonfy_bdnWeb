@@ -184,8 +184,11 @@ router.post('/news/get', async function (req, res) {
     keyword,
     from_id,
     start_date,
-    end_date = moment().format('YYYY-MM-DD'),
+    end_date,
   } = req.body;
+  if(!end_date){
+    end_date = moment().format('YYYY-MM-DD')
+  }
   console.log(from_id, keyword, start_date, end_date);
   try {
     if (from_id && keyword && start_date && end_date) {
@@ -248,9 +251,12 @@ router.post('/news/update', async function (req, res) {
     keyword,
     from_id,
     start_date,
-    end_date = moment().format('YYYY-MM-DD'),
+    end_date,
     update_date
   } = req.body;
+  if(!end_date){
+    end_date = moment().format('YYYY-MM-DD')
+  }
   console.log(from_id, keyword, start_date, end_date, update_date);
   try {
     if (from_id && keyword && start_date && end_date && update_date) {
