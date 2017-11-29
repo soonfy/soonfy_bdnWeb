@@ -258,7 +258,7 @@ router.post('/news/update', async function (req, res) {
         end = moment(end_date).endOf('day');
       let _keyword = await KeyWordModel.findOne({ from_id: from_id, keyword: keyword });
       if (_keyword) {
-        let counts = await CountModel.find({ keyword: _keyword.keyword, date: { $gte: start, $lte: end }, create_at: { $gte: moment(update_date).startOf('day') } }, { keyword: 1, date: 1, count: 1, create_at: 1 }, { sort: { date: 1 } });
+        let counts = await CountModel.find({ keyword: _keyword.keyword, date: { $gte: start, $lte: end }, create_at: { $gte: moment(update_date).startOf('day') } }, { keyword: 1, date: 1, count: 1, create_at: 1 }, { sort: { create_at: -1 } });
         // counts = ensure_data(start_date, end_date, counts)
         resp = Object.assign(resp, {
           statusCode: 200,
