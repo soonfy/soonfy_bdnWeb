@@ -1,4 +1,5 @@
 ## baidu news api
+对接 narnia 接口
 
 1. /api/news/add    
 > 添加，修改关键词    
